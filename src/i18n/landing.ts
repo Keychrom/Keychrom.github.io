@@ -72,7 +72,7 @@ export const landing = {
         {
           kicker: 'Effects',
           title: 'Ink that moves',
-          body: 'scenefx rounding and blur, per-window tint, custom curves, and close snapshots — all opt-in and reduced-motion aware.',
+          body: 'scenefx rounding and blur, per-window tint, custom curves, and close snapshots — on by default, with a plain no-scenefx build and reduced-motion support.',
         },
         {
           kicker: 'Japanese',
@@ -220,7 +220,7 @@ export const landing = {
         {
           kicker: 'エフェクト',
           title: '動くインク',
-          body: 'scenefx の角丸とブラー、ウィンドウ単位の tint、カスタムカーブ、閉じるスナップショット。すべて任意で、視差効果低減にも対応。',
+          body: 'scenefx の角丸とブラー、ウィンドウ単位の tint、カスタムカーブ、閉じるスナップショット。既定で有効で、scenefx なしビルドと視差効果低減にも対応。',
         },
         {
           kicker: '日本語',
