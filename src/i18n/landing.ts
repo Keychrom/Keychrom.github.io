@@ -63,7 +63,7 @@ export const landing = {
         {
           kicker: 'Shell',
           title: 'A shell, not an add-on',
-          body: 'Wallpaper, floating bar, searchable launcher, notifications, tray, media, audio, and compositor-aware bar modules in one panel.',
+          body: 'Wallpaper, floating bar, searchable launcher, notifications, tray, media, audio, compositor-aware bar modules, external widget popovers, and hot-reloading theme packages in one panel.',
         },
         {
           kicker: 'Extensions',
@@ -213,7 +213,7 @@ export const landing = {
         {
           kicker: 'シェル',
           title: '後付けではないシェル',
-          body: '壁紙、フローティングバー、検索ランチャー、通知、トレイ、メディア、音量、コンポジタ連携バーモジュールを 1 つのパネルに。',
+          body: '壁紙、フローティングバー、検索ランチャー、通知、トレイ、メディア、音量、コンポジタ連携バーモジュール、外部ウィジェットのポップオーバー、ホットリロード対応テーマパッケージを 1 つのパネルに。',
         },
         {
           kicker: '拡張',

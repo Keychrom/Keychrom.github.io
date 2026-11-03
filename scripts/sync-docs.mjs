@@ -202,6 +202,13 @@ function copyTree(from, to) {
   }
 }
 
+// Mirror a source folder so files deleted upstream also disappear here.
+function syncTree(from, to) {
+  if (!fs.existsSync(from)) return;
+  fs.rmSync(to, { recursive: true, force: true });
+  copyTree(from, to);
+}
+
 function main() {
   if (!fs.existsSync(path.join(source, 'README.md'))) {
     throw new Error(`Tessa source not found at ${source}; set TESSA_REPO.`);
@@ -257,9 +264,9 @@ function main() {
     });
   }
 
-  copyTree(path.join(source, 'docs/images'), path.join(publicRoot, 'images'));
-  copyTree(path.join(source, 'docs/benchmarks'), path.join(publicRoot, 'benchmarks'));
-  copyTree(path.join(source, 'examples'), path.join(publicRoot, 'examples'));
+  syncTree(path.join(source, 'docs/images'), path.join(publicRoot, 'images'));
+  syncTree(path.join(source, 'docs/benchmarks'), path.join(publicRoot, 'benchmarks'));
+  syncTree(path.join(source, 'examples'), path.join(publicRoot, 'examples'));
   fs.copyFileSync(path.join(source, 'config/config.example'), path.join(publicRoot, 'config.example'));
 
   console.log(`Synced ${pages.length * 2 + extraPages.length + 2} docs from ${source}`);
