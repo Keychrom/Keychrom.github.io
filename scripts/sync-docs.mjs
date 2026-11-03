@@ -85,8 +85,17 @@ function stripLeadingSwitch(text) {
   return lines.join('\n');
 }
 
+// The GitHub docs advertise their website copy with a marked notice block.
+// That block is for the repository view only, so drop it during import.
+function stripSiteNotice(text) {
+  return text.replace(
+    /<!-- tessa-site-notice:start -->[\s\S]*?<!-- tessa-site-notice:end -->\s*/g,
+    '',
+  );
+}
+
 function extractPage(text, fallbackTitle) {
-  let body = stripLeadingSwitch(text);
+  let body = stripLeadingSwitch(stripSiteNotice(text));
   let title = fallbackTitle;
   const h1 = body.match(/^#\s+(.+)$/m);
   if (h1) {
