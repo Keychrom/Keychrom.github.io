@@ -299,7 +299,7 @@ sudo PREFIX=/usr/local ./scripts/install-session.sh
 
 ディストリビューション向けのパッケージ定義は `packaging/arch/PKGBUILD` と
 `debian/` にあります。インストール内容と依存関係は
-[`packaging/README.md`](/ja/docs/) を参照してください。
+[`packaging/README.ja.md`](/ja/docs/packaging/) を参照してください。
 
 ### 3.3 headless 開発
 

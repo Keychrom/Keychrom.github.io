@@ -291,7 +291,7 @@ Log out and choose **Tessa** in GDM, SDDM, greetd, or another display manager.
 `XDG_CURRENT_DESKTOP=Tessa`, and starts `tessa`.
 
 Distribution packaging definitions live in `packaging/arch/PKGBUILD` and
-`debian/`. See [`packaging/README.md`](/docs/) for installed
+`debian/`. See [`packaging/README.md`](/docs/packaging/) for installed
 files and dependencies.
 
 ### 3.3 Headless development

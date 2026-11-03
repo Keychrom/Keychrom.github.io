@@ -123,6 +123,9 @@ function rewriteTarget(target, lang) {
   if (anchor === '#effect-helper-process-protocol') anchor = '#external-effect-helper';
   let pathPart = rawPath.replace(/^\.\//, '');
 
+  if (pathPart.includes('packaging/README')) {
+    return (lang === 'ja' ? '/ja/docs/packaging/' : '/docs/packaging/') + anchor;
+  }
   const basename = path.posix.basename(pathPart);
   const table = lang === 'ja' ? jaDocPaths : docPaths;
   if (table.has(basename)) {
@@ -131,9 +134,6 @@ function rewriteTarget(target, lang) {
 
   if (basename === 'README.md' || basename === 'README.ja.md') {
     return (lang === 'ja' ? '/ja/docs/' : '/docs/') + anchor;
-  }
-  if (pathPart.includes('packaging/README.md')) {
-    return 'https://github.com/Keychrom/Tessa/tree/main/packaging' + anchor;
   }
   if (pathPart.startsWith('images/') || pathPart.includes('/images/')) {
     return '/images/' + path.posix.basename(pathPart);
@@ -209,12 +209,37 @@ function main() {
     });
   }
 
+  const extraPages = [
+    {
+      source: 'packaging/README.md',
+      slug: 'packaging',
+      title: 'Packaging Tessa',
+      lang: 'en',
+      dir: enDocs,
+    },
+    {
+      source: 'packaging/README.ja.md',
+      slug: 'packaging',
+      title: 'Tessa のパッケージング',
+      lang: 'ja',
+      dir: jaDocs,
+    },
+  ];
+  for (const page of extraPages) {
+    const data = extractPage(readSource(page.source), page.title);
+    writeDoc(page.dir, page.slug, {
+      ...data,
+      title: data.title || page.title,
+      lang: page.lang,
+    });
+  }
+
   copyTree(path.join(source, 'docs/images'), path.join(publicRoot, 'images'));
   copyTree(path.join(source, 'docs/benchmarks'), path.join(publicRoot, 'benchmarks'));
   copyTree(path.join(source, 'examples'), path.join(publicRoot, 'examples'));
   fs.copyFileSync(path.join(source, 'config/config.example'), path.join(publicRoot, 'config.example'));
 
-  console.log(`Synced ${pages.length * 2 + 2} docs from ${source}`);
+  console.log(`Synced ${pages.length * 2 + extraPages.length + 2} docs from ${source}`);
 }
 
 main();

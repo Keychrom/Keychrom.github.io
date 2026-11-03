@@ -98,6 +98,11 @@ export default defineConfig({
               label: 'Development',
               translations: { ja: '開発' },
             },
+            {
+              slug: 'docs/packaging',
+              label: 'Packaging',
+              translations: { ja: 'パッケージング' },
+            },
           ],
         },
         {

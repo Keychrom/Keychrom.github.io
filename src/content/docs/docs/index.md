@@ -406,7 +406,7 @@ The `.deb` path is retained for downstream packaging, but 0.2.4 remains the
 last published Debian package; `debian/control` now expects
 `libwlroots-0.20-dev`.
 
-See [packaging/README.md](/docs/).
+See [packaging/README.md](/docs/packaging/).
 
 For screen sharing, install `xdg-desktop-portal`, `xdg-desktop-portal-wlr`, and
 PipeWire. The packaged selector is
