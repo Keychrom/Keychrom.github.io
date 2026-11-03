@@ -110,16 +110,16 @@ export const landing = {
     install: {
       eyebrow: 'Get Tessa',
       title: 'Start in a few minutes.',
-      body: 'Packages track the 0.2.4 release; the current 0.2.5 tree builds from source with Zig 0.17 and wlroots 0.20.',
+      body: 'Packages track the 0.2.4 release; the current 0.2.5 tree builds from source with Zig 0.17, wlroots 0.20, and scenefx 0.5.',
       tabs: {
         arch: 'Arch Linux',
         ubuntu: 'Ubuntu',
         source: 'From source',
       },
       notes: {
-        arch: 'Official zig and wlroots0.20 packages. The PKGBUILD does not enable scenefx by default.',
-        ubuntu: 'The 0.2.4 .deb is the final planned Debian package. Build from source for 0.2.5.',
-        source: 'Requires Zig 0.17, wlroots 0.20, Wayland, Cairo, Pango, and fonts.',
+        arch: 'Official zig, wlroots0.20, and scenefx packages. Rounded corners and blur are enabled by default.',
+        ubuntu: 'The 0.2.4 .deb is the final planned Debian package and uses the plain wlroots scene. Build from source for 0.2.5.',
+        source: 'Requires Zig 0.17, wlroots 0.20, scenefx 0.5, Wayland, Cairo, Pango, and fonts.',
       },
       copy: 'Copy',
       copied: 'Copied',
@@ -258,16 +258,16 @@ export const landing = {
     install: {
       eyebrow: 'Tessa を入手',
       title: '数分ではじめられます。',
-      body: 'パッケージは 0.2.4 リリース時点です。現在の 0.2.5 ツリーは Zig 0.17 と wlroots 0.20 でソースからビルドします。',
+      body: 'パッケージは 0.2.4 リリース時点です。現在の 0.2.5 ツリーは Zig 0.17、wlroots 0.20、scenefx 0.5 でソースからビルドします。',
       tabs: {
         arch: 'Arch Linux',
         ubuntu: 'Ubuntu',
         source: 'ソースから',
       },
       notes: {
-        arch: '公式の zig と wlroots0.20 を使用します。PKGBUILD は既定で scenefx を有効にしません。',
-        ubuntu: '0.2.4 の .deb が最後の予定 Debian パッケージです。0.2.5 はソースからビルドしてください。',
-        source: 'Zig 0.17、wlroots 0.20、Wayland、Cairo、Pango、フォントが必要です。',
+        arch: '公式の zig、wlroots0.20、scenefx を使用します。角丸とブラーは既定で有効です。',
+        ubuntu: '0.2.4 の .deb が最後の予定 Debian パッケージで、plain wlroots シーンを使用します。0.2.5 はソースからビルドしてください。',
+        source: 'Zig 0.17、wlroots 0.20、scenefx 0.5、Wayland、Cairo、Pango、フォントが必要です。',
       },
       copy: 'コピー',
       copied: 'コピー済み',
