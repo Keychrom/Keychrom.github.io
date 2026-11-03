@@ -1,0 +1,17 @@
+---
+import LandingLayout from '../../layouts/LandingLayout.astro';
+---
+
+<LandingLayout locale="ja" title="ページが見つかりません — Tessa" description="要求されたページは存在しません。">
+  <section class="site-container flex min-h-[65vh] flex-col items-center justify-center py-24 text-center">
+    <p class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-[var(--tessa-accent-2)]">404 · シーングラフの迷子</p>
+    <h1 class="display mt-5 text-[clamp(3rem,8vw,6rem)]">ここには何もありません。</h1>
+    <p class="mt-4 max-w-md text-sm leading-6 text-[var(--tessa-muted)]">
+      ページが移動したか、レイアウトの裏に隠れています。ドキュメントかホームへ戻ってください。
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="/ja/docs/" class="rounded-full bg-[var(--tessa-accent)] px-5 py-3 text-sm font-semibold text-[#fff8f4]">ドキュメントを読む</a>
+      <a href="/ja/" class="rounded-full border border-[var(--tessa-border-soft)] px-5 py-3 text-sm font-semibold text-[var(--tessa-text)]">ホームへ戻る</a>
+    </div>
+  </section>
+</LandingLayout>

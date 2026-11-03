@@ -1,0 +1,435 @@
+# Tessa configuration
+# Install this file as ~/.config/tessa/config.
+# Values are simple `key = value` lines. Lines starting with # are ignored.
+# Relative include paths are resolved next to the including file.
+# The config directory is watched; atomic saves reload automatically.
+# include = keybindings.conf
+
+terminal = kitty
+gaps = 10
+outer_gaps = 16
+border_width = 2
+master_ratio = 0.58
+
+# master: classic master/stack
+# mosaic: spiral tessera layout
+# grid: balanced grid
+# columns: equal-width columns
+# scrolling (scroll, scroller): Niri-style horizontal columns
+# monocle: focused window fills the workspace
+# stacking (deck): master area plus overlapping stack cards
+# custom: external layout helper (see below)
+# Super+T cycles layout_cycle at runtime, per output and workspace.
+# Runtime choices are saved to outputs.conf and restored on restart.
+layout = master
+# Optional per-workspace initial layout overrides. These seed workspaces with no
+# saved runtime choice; a config reload updates non-overridden workspaces.
+# layout_1 = grid
+# layout_2 = columns
+
+# Layout tuning. master_count stacks that many windows in the master column.
+# mosaic falls back to grid when a tile would be smaller than mosaic_min_size.
+# grid_columns = 0 chooses ceil(sqrt(window_count)).
+# master_count = 2
+# mosaic_ratio = 0.62
+# mosaic_min_size = 160
+# grid_columns = 0
+
+# Scrolling layout. Widths accept a percentage of the viewport ("50%"), a
+# fraction ("0.5"), or a fixed client width in logical pixels ("640").
+# default_column_width = 50%
+# column_width_presets = 33.333%,50%,66.667%
+# center_focused_column = never   # never | always | on-overflow
+# Viewport animation duration in milliseconds; 0 disables the slide.
+# animation_view_ms = 180
+# Curve used by the scrolling viewport (builtin or curve = name,...).
+# animation_view_curve = ease-out-cubic
+# The default cycle keeps the original four modes so existing setups behave the
+# same. Add the new modes explicitly:
+# layout_cycle = master,mosaic,grid,columns,scrolling,monocle,stacking
+
+# Declarative window rules. Match app-id, title, and/or output; values support
+# shell-style * and ? patterns. `match`/`expr` adds boolean POSIX-regex
+# expressions (==, !=, ~, !~, &&/and, ||/or, !, parentheses).
+# window-rule = app-id=pavucontrol; float=true
+# window-rule = title=Picture-in-Picture; float=true; position=40,40
+# window-rule = app-id=firefox; workspace=2
+# window-rule = title=GIMP*; float=false
+# window-rule = match=app ~ "^firefox$" && title !~ "Private|Incognito"; workspace=2
+# Per-window decoration colors are also used by close snapshots. Visual actions
+# (opacity, corner-radius, blur, shadow, border-width) re-evaluate when the
+# title or app-id changes; layout actions wait for map or config reload.
+# window-rule = title=Chat*; border-active=#4cc9f0; border-inactive=#1b2a41
+# window-rule = app-id=mpv; opacity=1; corner-radius=0; border-width=0; shadow=false
+# Allow tearing for one fullscreen app while the global default stays off.
+# window-rule = app-id=gamescope; tearing=true
+# window-rule = title=Picture-in-Picture; opacity=0.85; corner-radius=14; blur=true
+# A translucent colour overlay above the content; #RRGGBB or #RRGGBBAA.
+# window-rule = app-id=mpv; tint=#ff884422
+# Per-window motion: animation=false disables all motion for matching windows.
+# animation-ms sets the base duration; open/workspace/close durations and curves
+# can be overridden independently.
+# window-rule = app-id=kitty; animation=false
+# window-rule = title=Picture-in-Picture; animation-ms=260; animation-curve=spring-soft; animation-close-ms=180; animation-close-curve=bounce
+# Scratchpad windows stay floating and hidden per output until toggled.
+# `workspace=special` is an alias for scratchpad=true.
+# window-rule = app-id=org.example.notes; scratchpad=true
+# bind = SUPER+grave toggle-scratchpad
+# bind = SUPER+SHIFT+grave move-to-scratchpad
+
+# Tabbed window groups. Super+Shift+G groups the tiled windows on the active
+# workspace; Super+Tab / Super+Shift+Tab cycle tabs while a group is focused.
+# group-add/group-remove are available for custom bindings; IPC commands are
+# toggle-group, group-next, group-prev, group-add, and group-remove.
+# bind = SUPER+SHIFT+g toggle-group
+# bind = SUPER+ALT+g group-add
+# bind = SUPER+ALT+SHIFT+g group-remove
+
+# Layer-shell rules match namespace/output and optionally layer
+# (background, bottom, top, overlay). Later matches win. Opacity works in every
+# build; corner-radius and blur require -Dscenefx=true.
+# layer-rule = namespace=tessa-bar; opacity=0.94; corner-radius=12; blur=true
+# layer-rule = namespace=tessa-notifications; layer=top; opacity=1; blur=false
+# External bars and launchers can use the same rules.
+# layer-rule = namespace=waybar; opacity=0.94; corner-radius=12; blur=true
+# layer-rule = namespace=wofi; opacity=0.98; corner-radius=14; blur=true
+
+# Per-workspace layout/spacing overrides. Runtime layout choices still win over
+# the layout seed; Super+Ctrl+H/L adjusts the active workspace master ratio.
+# Scrolling keys set the initial column width and focus centering for that
+# workspace.
+# workspace-rule = ws=2; layout=grid; gaps=4; outer-gaps=8; master-ratio=0.65
+# workspace-rule = ws=3; layout=scrolling; default-column-width=40%; center-focused-column=always
+
+# Named layout/tuning profiles, referenced by output/workspace rules. Explicit
+# keys in the rule override profile values.
+# profile = compact; gaps=0; outer-gaps=0; master-ratio=0.5; master-count=2
+# profile = grid3; layout=grid; grid-columns=3; gaps=6; outer-gaps=2
+# workspace-rule = ws=2; profile=grid3
+
+# Named workspaces. Names are single tokens (no spaces), cannot be numeric, and
+# can be used by workspace bindings, window-rule workspace=, and IPC commands.
+# workspace-name = 2 Code
+# workspace-name = 3 Chat
+# bind = SUPER+2 workspace Code
+# bind = SUPER+SHIFT+2 move-to-workspace Code
+# window-rule = app-id=org.mozilla.firefox; workspace=Chat
+
+# Named special workspaces are hidden overlays, separate from the numeric
+# workspace row and from the scratchpad. Declare each name, then assign windows
+# with special= in a rule or toggle/move them from bindings and IPC.
+# special-workspace = notes
+# special-workspace = tools
+# window-rule = app-id=com.example.notes; special=notes; size=520x360
+# bind = SUPER+ALT+n special notes
+# bind = SUPER+ALT+SHIFT+n move-to-special notes
+
+# Per-output tuning. Add ws= to apply a layout rule to one workspace on that
+# output. Theme keys apply to all workspaces and are re-read by the panel.
+# Match by connector name, EDID make/model/serial, or any combination. All
+# match fields that are present must match; values support shell-style * and ?.
+# output-rule = output=HDMI-A-1; layout=grid; gaps=8; outer-gaps=12
+# output-rule = output=HDMI-A-1; ws=2; layout=master; master-ratio=0.62
+# output-rule = output=HDMI-A-1; profile=compact; gaps=4
+# output-rule = output=HDMI-A-1; accent=#8fd3ff; bg=#0c1118
+# output-rule = output=HDMI-A-1; border-active=#8fd3ff; border-inactive=#243040
+# output-rule = output=HDMI-A-1; panel-bg=#111827; bar-height=52; bar-top-margin=8
+# Match the same monitor after a connector rename. adaptive-sync=on enables
+# VRR when the output supports it; adaptive-sync=off forces it off.
+# output-rule = make=Dell Inc.; model=DELL U2723QE; adaptive-sync=on
+# output-rule = serial=ABC123; adaptive-sync=off
+
+# Monitor positions are runtime state, not output-rule fields. Arrange them
+# with wlr-randr; Tessa persists the result in outputs.conf:
+#   wlr-randr --output DP-1 --pos 0,0
+#   wlr-randr --output HDMI-A-1 --pos 2560,0
+# With Tessa stopped, the same output lines can be edited in outputs.conf.
+
+# External custom tiling. One long-lived helper runs per output and receives
+# asynchronous HELLO/LAYOUT/AREA/WINDOW/END requests with focus/urgent metadata,
+# returning VERSION/RECT/END responses. See docs/CUSTOMIZATION.md and
+# examples/layout-cascade.py.
+# layout = custom
+# layout_helper = python3 ~/.config/tessa/layout.py
+# layout_helper_timeout = 100
+
+# Long-lived visual effect helper. It receives window metadata (app-id, title,
+# output, workspace, focus, fullscreen, geometry, and rule visuals) and returns
+# per-window opacity, corner radius, blur/shadow overrides, border width, tint,
+# and animation duration/curve overrides. Protocol v2 uses tab-separated
+# key=value fields; v1 positional helpers remain compatible. Requests are
+# coalesced; there is no in-process plugin VM. See docs/EXTENDING.md for the
+# line protocol.
+# effect_helper = python3 ~/.config/tessa/effects.py
+# effect_helper_timeout = 200
+
+# Supervised extensions. Each entry starts one long-lived process. The process
+# connects to the IPC socket and sends `HELLO 1 $TESSA_EXTENSION_TOKEN` to
+# identify itself. Tokens rotate on every start; stopping or reloading an
+# extension revokes its authenticated connections. Permissions are cooperative
+# scopes, not a sandbox: read, events, status, window, workspace, layout, spawn,
+# panel, control, extensions (or all/none). `requires` waits until the
+# dependency is ready; `after` only affects startup order.
+# extension_ready_timeout = 10000
+# extension = id=weather; command=weatherd; api=1; permissions=read,status
+# extension = id=theme; command=tessa-theme; api=1; requires=weather; after=weather
+
+# Render-commit time budget in milliseconds. Frames above this budget are
+# counted by `tessa-ctl perf`; use `tessa-ctl perf --json` for benchmarks.
+# The default targets a 60 Hz desktop (16 ms). On a software headless renderer,
+# set a larger budget for automated checks.
+frame_time_budget = 16
+
+# Rendering and game features. Direct scanout hides the compositor's own scene
+# nodes while an opaque fullscreen window covers an output, allowing the client
+# buffer to be scanned out without composition. It falls back automatically
+# when a popup, notification, or overlay is visible.
+direct_scanout = true
+
+# Tearing is opt-in and additionally requires the client to request async
+# presentation through wp-tearing-control-v1. off: never, fullscreen: only a
+# fullscreen client, force: any async-hinted client (expert).
+tearing = off
+
+# Advertise linux-drm-syncobj-v1 when the renderer and backend support
+# timelines. Disabling this requires a compositor restart.
+explicit_sync = true
+
+# Window motion. Open and workspace switches slide into place. Per-kind
+# durations override animation_ms; -1 inherits it. reduce_motion disables
+# movement, while reduce_motion_animations=fade keeps only a close fade.
+# Built-in curves: linear, ease-out-cubic, ease-in-out-cubic, ease-out-quint,
+# ease-in-out-quint, smoothstep, overshoot, spring, spring-soft, spring-bouncy.
+# Define a named cubic-bezier with `bezier = name, x1, y1, x2, y2`, or a
+# normalized spring with `spring = name, damping, frequency` (damping 0.05-2,
+# frequency 0.25-4 oscillations over the animation), then reference it by name.
+animations = true
+animation_ms = 160
+# animation_open_ms = 160
+# animation_workspace_ms = 220
+# animation_close_ms = 180
+# animation_curve = ease-out-cubic
+# animation_open_curve = linear
+# animation_workspace_curve = ease-in-out-cubic
+# animation_close_curve = smoothstep
+# bezier = snap, 0.16, 1.0, 0.3, 1.0
+# spring = bounce, 0.35, 1.4
+# animation_open_x = 0
+# animation_open_y = 18
+# animation_workspace_offset = 54
+# animation_close_scale = 0.92
+# animation_close_fade = true
+reduce_motion = false
+reduce_motion_animations = none
+reduce_motion_fade_ms = 120
+# Soft stacked shadows behind tiled and floating windows.
+shadows = true
+# Rounded corners and backdrop blur require -Dscenefx=true; otherwise these
+# keys are accepted but have no visual effect.
+corner_radius = 10
+blur = true
+blur_radius = 6
+blur_passes = 3
+
+# Start tessa-panel together with the compositor.
+panel = true
+# Select the parts of Tessa Panel that run. Use this to keep Tessa
+# notifications while Waybar owns the bar, or to let an external launcher take
+# over. `all` (default) and `none` are accepted.
+# panel_modules = background,bar,launcher,popovers,notifications,toasts,tray,media,audio
+# For example, Tessa notifications and launcher with an external bar:
+# panel_modules = launcher,notifications,toasts
+# External layer-shell bars (Waybar, Quickshell) reserve their exclusive zone
+# automatically. To use one as the only bar, disable Tessa Panel here and start
+# it from `startup` below; the default stays the integrated panel.
+# panel = false
+# startup = waybar
+# Panel geometry and bar palette. Changes apply on config reload; a geometry
+# change recreates the bar layer surface.
+bar_height = 44
+bar_top_margin = 12
+bar_side_margin = 16
+panel_bg = #0e1320
+panel_fg = #eef2f8
+# Composable bar modules. The list selects visible modules and orders the
+# right-hand cluster (first listed is closest to the right edge). logo/workspaces/chips stay anchored.
+# Names: logo, workspaces, chips, clock, battery, network, volume, stats, media,
+# tray, status. Unknown names are ignored for forward compatibility.
+# bar_layout = logo,workspaces,chips,clock,media,stats,volume,network,battery,tray,status
+# Per-surface fonts and colors. Unset values fall back to `font` and panel_fg.
+# bar-font = Inter
+# launcher-font = Inter
+# popover-font = Inter
+# toast-font = Inter
+# bar-fg = #eef2f8
+# launcher-fg = #eef2f8
+# popover-fg = #eef2f8
+# toast-fg = #eef2f8
+# bar-bg = #0e1320
+# launcher-bg = #0d1220
+# popover-bg = #0d1220
+# toast-bg = #0e1320
+# Wallpaper. bg_top/bg_bottom override the gradient derived from bg. Set
+# wallpaper_art = false for a clean gradient without ink/sun/water artwork.
+# wallpaper_image replaces the gradient/art with a PNG (absolute path or ~/...);
+# wallpaper_fit is cover, contain, or stretch. wallpaper-shader runs a command
+# that prints a binary PPM (P6, maxval 255) frame and takes precedence over the
+# image. It is re-run on config reload, so animated shaders should be driven by
+# a long-lived helper instead.
+# bg_top = #162038
+# bg_bottom = #070a12
+# wallpaper_art = true
+# wallpaper_image = ~/Pictures/wallpaper.png
+# wallpaper_shader = ~/.config/tessa/wallpaper.ppm.sh
+# wallpaper_fit = cover
+
+# Commands for the power menu (right-click the TESSA mark).
+power_lock = loginctl lock-session
+power_suspend = systemctl suspend
+power_reboot = systemctl reboot
+power_off = systemctl poweroff
+
+# Screenshot PNG output (default ~/Pictures/Screenshots). Super+Shift+S opens
+# the region/full-output capture UI.
+screenshot_dir = ~/Pictures/Screenshots
+
+# Volume control. Empty commands auto-detect wpctl, pactl, then amixer.
+# Super+Shift+A opens the volume popover. Override individual commands here;
+# custom commands run through /bin/sh and the status command should print a
+# percentage such as "42%".
+# volume_status = wpctl get-volume @DEFAULT_AUDIO_SINK@
+# volume_up = wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+# volume_down = wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+# volume_mute = wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+
+# Start xwayland-satellite for X11 applications and export DISPLAY.
+# "auto" picks the first free display (:0, :1, ...).
+xwayland = true
+xwayland_display = auto
+
+# X11 input methods. Tessa exports XMODIFIERS for X11 clients and can start an
+# XIM server once the XWayland display exists. xim_start is optional; leave it
+# empty if fcitx5/ibus is already started from startup or the session.
+xim = true
+xim_server = fcitx
+# xim_start = fcitx5 -d
+
+# Touchpad gestures. A horizontal swipe switches workspace; an upward swipe
+# opens the launcher. Other finger counts and pinch/hold gestures are forwarded
+# to the focused client. Thresholds are in gesture delta units.
+gestures = true
+gesture_fingers = 3
+gesture_workspace_threshold = 400
+gesture_launcher_threshold = 300
+touch = true
+tablet = true
+pointer_constraints = true
+
+# Per-device libinput policy. Rules are evaluated in file order and merged, so
+# later rules can override earlier ones. `type` is any, keyboard, pointer,
+# touchpad, mouse, touch, tablet, tablet-pad, or switch. `name` matches the
+# libinput device name with * and ?. Settings apply on hotplug and on config
+# reload; removing a rule restores the device's original libinput state.
+# input = type=touchpad; tap=true; tap-drag=true; natural-scroll=true
+# input = type=touchpad; name=*Precision*; accel-profile=flat; accel-speed=-0.3
+# input = type=mouse; name=*Mouse*; natural-scroll=false; scroll-method=button; scroll-button=275
+# input = type=touchpad; dwt=false; click-method=clickfinger
+# input = type=pointer; left-handed=true
+
+# Xcursor theme and size. Leave the theme empty for the system default. Changes
+# apply immediately on config reload; an unknown theme keeps the previous cursor.
+# cursor_theme = Adwaita
+cursor_size = 24
+
+# Advertise zwp_linux_dmabuf_v1 to clients. Tessa disables it automatically on
+# vmwgfx, where the kernel rejects wlroots' dmabuf handle-close path and clients
+# disconnect with "importing the supplied dmabufs failed". Set
+# TESSA_ALLOW_LINUX_DMABUF=1 to force it back on for debugging.
+# linux_dmabuf = true
+
+# Where wlr-randr changes are persisted. The default is
+# $XDG_CONFIG_HOME/tessa/outputs.conf (or ~/.config/tessa/outputs.conf).
+# TESSA_OUTPUT_CONFIG overrides this. Use an absolute path.
+# output_config = /home/you/.config/tessa/outputs.conf
+
+# XKB keyboard layout. Empty values use the environment defaults.
+# Example: kb_layout = us,de
+#          kb_options = grp:alt_shift_toggle
+kb_layout =
+kb_variant =
+kb_options =
+kb_model =
+kb_rules =
+repeat_rate = 25
+repeat_delay = 600
+
+# The shell palette. Both the compositor borders and the panel use these.
+accent = #e2684f
+bg = #0a0f1a
+# Empty border_active uses accent.
+# border_active = #e2684f
+# border_inactive = #293347
+font = Inter
+
+# Semantic theme roles shared by the compositor and panel. Roles are applied
+# after direct keys, so they win over accent/border/bg/panel values above.
+# A matching output-rule theme still wins for that output.
+# theme-role = accent = #e2684f
+# theme-role = window.border.active = #8fd3ff
+# theme-role = window.border.inactive = #243040
+# theme-role = window.background = #0a0f1a
+# theme-role = panel.background = #0e1320
+# theme-role = panel.foreground = #eef2f8
+# theme-role = wallpaper.top = #162038
+# theme-role = wallpaper.bottom = #070a12
+
+# Run commands at startup, or react to compositor events.
+# Hooks receive TESSA_EVENT plus TESSA_WINDOW_ID, TESSA_WORKSPACE,
+# TESSA_OUTPUT, TESSA_APP_ID, TESSA_TITLE, and related variables.
+# startup = fcitx5 -d
+# hook = window-open notify-send "Window opened" "$TESSA_TITLE"
+# hook = workspace-change ~/.config/tessa/workspace.sh
+# Event rules filter events with the same expressions as window rules and run
+# before unconditional hooks. Extra fields: event, ws, id (compared as strings).
+# event-rule = window-open; match=app ~ "^firefox$" && ws == "2"; run=notify-send "Firefox" "workspace 2"
+# event-rule = workspace-change; match=ws == "3"; run=~/.config/tessa/on-workspace-3
+
+# Extra launcher entries (panel-side; included files also work).
+# launcher_entry = Notes | foot -e nvim ~/notes.md
+# launcher_entry = Lock screen | swaylock
+
+# Additional or overriding key bindings.
+# XKB keysym names are used: Return, Tab, Left, Right, 1, h, ...
+# bind = SUPER+Return terminal
+# bind = SUPER+d launcher
+# bind = SUPER+v clipboard
+# bind = SUPER+SHIFT+s screenshot
+# bind = SUPER+m media
+# bind = SUPER+SHIFT+t tray
+# bind = SUPER+SHIFT+a audio
+# bind = SUPER+t toggle-layout
+# bind = SUPER+g set-layout grid
+# bind = SUPER+1 workspace 1
+# bind = SUPER+SHIFT+1 move-to-workspace 1
+# bind = SUPER+h focus left
+# bind = SUPER+SHIFT+h move left
+# bind = SUPER+ctrl+h ratio -0.03
+# bind = SUPER+shift+e quit
+
+# Named input modes. In a mode, bindings match without Super. Add
+# `mode = default` before returning to the global keymap. mode_timeout returns
+# to default after inactivity. leader enters the "leader" mode; a matching
+# binding runs one action and returns to default.
+# leader = SUPER+SPACE
+# leader_timeout = 1000
+# mode = leader
+# bind = f spawn firefox
+# bind = t spawn kitty
+# bind = Escape enter-mode default
+# mode = resize
+# mode_timeout = 300
+# bind = h resize-width -30
+# bind = l resize-width 30
+# bind = Escape enter-mode default
+# mode = default
+# bind = SUPER+SHIFT+r enter-mode resize

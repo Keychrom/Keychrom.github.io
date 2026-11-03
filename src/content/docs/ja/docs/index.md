@@ -1,0 +1,1268 @@
+---
+title: "概要"
+description: "wlroots の上に Zig で実装した、静かなタイル型 Wayland デスクトップです。"
+---
+
+wlroots の上に Zig で実装した、静かなタイル型 Wayland デスクトップです。
+
+Tessa はコンポジタであり、小さなシェルでもあります。フローティングタスクバー、
+検索できるランチャー、壁紙、タイルレイアウト、ワークスペース、ウィンドウの
+ボーダーまで、すべてこのリポジトリに含まれています。既定は Tessa Panel で、
+Waybar / Rofi / wofi は必須ではありませんが、layer-shell 対応の外部バーや
+ランチャーに置き換えることもできます。
+
+![Tessa のモザイクレイアウト](/images/mosaic.png)
+
+![Tessa のランチャー](/images/launcher.png)
+
+上のスクリーンショットは headless 開発セッションで、ターミナルに foot を使って
+撮影したものです。
+
+ビルド、インストール、全設定キー、ルール、エフェクト、IPC、イベント、
+フックを一冊にまとめた
+[セットアップ＆カスタマイズ完全ガイド](/ja/docs/guide/) もあります。
+
+## Ubuntu 26.04 へのインストール
+
+[v0.2.4 リリースページ](https://github.com/Keychrom/Tessa/releases/tag/v0.2.4)
+に amd64 用のビルド済みパッケージがあります。通常はこの方法を推奨します。
+バイナリパッケージの利用に Zig や wlroots の開発ヘッダーは不要です。
+
+```sh
+sudo apt update
+sudo apt install curl
+curl -fLO https://github.com/Keychrom/Tessa/releases/download/v0.2.4/tessa_0.2.4_amd64.deb
+curl -fLO https://github.com/Keychrom/Tessa/releases/download/v0.2.4/SHA256SUMS
+grep ' tessa_0.2.4_amd64.deb$' SHA256SUMS | sha256sum -c -
+sudo apt install ./tessa_0.2.4_amd64.deb
+```
+
+> **0.2.4 が最後の `.deb` リリースになる可能性があります。** Zig 0.16 /
+> wlroots 0.19 を前提にした最後のパッケージとして計画しています。現在の
+> ソースツリー（`0.2.5`）は Zig 0.17 / wlroots 0.20 / scenefx 0.5 を対象と
+> するため、新しいツールチェーンではソースビルドまたは Arch パッケージを
+> 使用してください。
+
+`apt` が実行時ライブラリ、コンポジタ、パネル、CLI、セッションエントリ、
+設定例、ポータル設定、man ページを導入します。実用的な追加パッケージ:
+
+```sh
+sudo apt install kitty wlr-randr grim dbus \
+  fcitx5 fcitx5-mozc \
+  xdg-desktop-portal xdg-desktop-portal-wlr pipewire
+```
+
+`xwayland-satellite` は Ubuntu 26.04 のパッケージにはないため、X11
+アプリケーションが必要なら上流から導入してください。既定の
+`xwayland = true` のまま satellite がない場合は警告が出ます。
+
+ログアウトし、GDM / SDDM などのセッション選択で **Tessa** を選びます。
+`.deb` が `/usr/share/wayland-sessions/tessa.desktop` を導入するので、
+下のソース用セッションインストーラーは開発時だけ必要です。
+
+TTY で最初の動作確認をする場合:
+
+```sh
+tessa
+```
+
+終了は `Super+Shift+E` です。パッケージの確認:
+
+```sh
+dpkg -s tessa
+tessa-ctl config-check
+```
+
+以前 `/usr/local` に手動インストールしたTessaがある場合は、どちらか一方に
+揃えてください。通常は `/usr/local/bin` が `/usr/bin` より先に来るため、
+手動版のバイナリが使われ続けます。
+
+## Arch Linux へのインストール
+
+Tessa は Zig **0.17** と wlroots **0.20** を要求します。どちらも Arch 公式
+リポジトリの `zig` と `wlroots0.20` で提供されています。ビルド依存を導入して
+ください:
+
+```sh
+sudo pacman -Syu --needed base-devel git zig wlroots0.20 \
+  wayland wayland-protocols libxkbcommon libinput pixman libdrm \
+  libseat libudev libegl libgles2 mesa cairo pango glib2
+```
+
+続いて Tessa の PKGBUILD からインストールします:
+
+```sh
+git clone https://github.com/Keychrom/Tessa.git
+cd Tessa/packaging/arch
+makepkg -si
+```
+
+`tessa-git` パッケージはコンポジタ、パネル、CLI、セッションエントリ、
+設定例、ポータル設定、man ページ、ドキュメントを `/usr` 以下へ導入します。
+確認:
+
+```sh
+tessa-ctl config-check
+command -v tessa tessa-panel tessa-ctl
+```
+
+実用的な追加パッケージ:
+
+```sh
+sudo pacman -S --needed kitty wlr-randr grim dbus fcitx5 fcitx5-mozc \
+  xdg-desktop-portal xdg-desktop-portal-wlr pipewire
+```
+
+X11 アプリケーションには AUR の `xwayland-satellite-git` を導入します。
+`scenefx` 0.5 は `-Dscenefx=true` のカスタムビルド専用で、PKGBUILD の既定
+ビルドでは角丸もブラーも有効になりません。TTY にログインして `tessa` を
+実行するか、ディスプレイマネージャーで **Tessa** を選んでください。
+
+0.2.4 の Arch パッケージは、0.16/0.19 の AUR ツールチェーンを使って Arch
+Linux 実機でビルドし、通常セッションと plain／scenefx ビルドで動作を確認して
+います。0.2.5 の PKGBUILD は公式の `zig` 0.17 と `wlroots0.20` で Arch Linux
+実機にビルド・インストールし、headless スイートが plain／scenefx
+の両構成で成功しています。`makepkg` が依存関係や ABI の不一致を報告した場合は、
+`zig version` が `0.17.x` で、`pkg-config --modversion wlroots-0.20` が
+`0.20.x` を返すことを確認してください。
+
+`build.zig` はすべてのビルドモードで LLVM/LLD を強制するため、古い Zig の
+セルフホストリンカーと glibc 2.43 / GCC 16 の組み合わせで発生した
+`R_X86_64_PC64` リロケーション問題のために最適化モードを変える必要は
+ありません。
+
+## 状態
+
+現在の開発ツリーは `0.2.5` で、`0.2.4` が最新のバイナリリリースです。
+日常的に使えるレベルまで中核機能は実装されています。
+0.7 のカスタマイズ性ロードマップ項目は完了しています
+（[docs/ROADMAP.ja.md](/ja/docs/roadmap/)）。
+
+主な機能:
+
+- Zig による wlroots 0.20 コンポジタ（DRM / headless / ネストした Wayland
+  バックエンドを wlroots が自動判定）
+- xdg-shell トップレベル、layer-shell、data-device と primary-selection
+  （クリップボード）、xdg-activation、xdg-decoration、cursor-shape-v1、
+  wlr-screencopy（grim が動作）
+- マスター/スタック、Tessa 独自の「モザイク」スパイラル、グリッド、
+  等幅カラム、Niri 風 Scrolling、Monocle、Deck 型 Stacking の各レイアウト。
+  ワークスペースごとのレイアウト/隙間/マスター比率、マスター列の数、
+  モザイク比率/最小サイズ、グリッド列数、カラム幅/プリセット、フォーカス
+  中央寄せも設定可能（`Super+T` で設定した巡回リストを順に表示）。実行中に
+  選んだレイアウトは再起動後も復元され、設定の再読み込みは上書きしていない
+  ワークスペースだけを更新
+- タイルの動的な並べ替え。IPC の `reorder`/`swap`、またはタイル上の
+  `Super`+左ドラッグで挿入位置を指定できます。Scrolling ではドラッグが
+  カラムの挿入になり、`Super`+ホイールで viewport をスクロールします
+- app-id/タイトル/出力、または真偽値と POSIX 正規表現の式でマッチする
+  宣言的ウィンドウルール。フローティング、ワークスペース、フルスクリーン、
+  サイズ、位置、ウィンドウ別ボーダー色、不透明度、角丸、ブラー、影、tint、
+  ボーダー幅を指定可能。namespace/出力/レイヤーでマッチするレイヤーシェル
+  ルールにも対応
+- 独自タイルアルゴリズム向けの外部レイアウトヘルパー v2。出力ごとの非同期
+  プロセス、リクエスト合流、フォーカス／緊急度メタデータ、バージョン
+  ネゴシエーション、タイムアウト、再起動、内蔵レイアウトへのフォールバック
+- 名前付き special ワークスペース: ルールまたはコマンドで割り当てる出力別の
+  非表示オーバーレイ。バインド/IPC による表示切替と移動、フォーカス処理、
+  スクラッチパッドとは独立した可視状態
+- 常駐エフェクトヘルパー v2: ウィンドウ状態を受け取り、ウィンドウ別の
+  不透明度、角丸、ブラー/影、ボーダー幅、tint、アニメーション上書きを返す。
+  リクエストは合流され、v1 ヘルパーとも互換。プロセス内プラグイン VM は
+  使わない
+- 設定で宣言する監視付き拡張機能: 安定版 v1 API、権限スコープ、トークン
+  回転、`requires`/`after` 依存、pidfd 監視、ready timeout、再起動バックオフ、
+  ライフサイクルイベント、`tessa-ctl extensions`、パネルの拡張一覧
+- `panel_modules` でバー/ランチャー/通知/ポップオーバーなどを選択でき、
+  Waybar/Quickshell のバーと Tessa の通知やランチャーを共存可能
+- 組み合わせ可能なシェル v2 バーモジュール（表示/順序を設定可能）、
+  バー/ランチャー/ポップオーバー/トースト別のフォントと前景/背景色、
+  PNG または PPM シェーダー壁紙、バー・ポップオーバー・トーストへの
+  レイヤールール適用
+- フレームタイム計測（`tessa-ctl perf`）と設定可能な `frame_time_budget`、
+  アニメーション／全エフェクトのヘッドレスベンチマーク
+- 出力全体を覆うフルスクリーンクライアントの direct scanout と、
+  `tessa-ctl rendering` の scanout/zero-copy/tearing カウンタ、
+  `tessa-ctl perf` の presented/vsync/missed とフレーム時間。
+  ドライバーの test と通常 flip へのフォールバックを備えたオプトイン
+  `wp-tearing-control-v1`、条件付きの `linux-drm-syncobj-v1` explicit sync。
+  HDR color management は調査のみで未公開。詳細は
+  [docs/RENDERING.ja.md](/ja/docs/rendering/)
+- 検証と実効設定の差分プレビュー付き対話型設定編集
+  （`tessa-ctl config-check <file>`、`config-diff <file>`、`config-edit`）と、
+  コンポジタを起動せずに検証する `tessa --check-config [file]`
+- 内蔵パネルの監視と自動復旧: pidfd で終了を検知し、上限付き指数バックオフで
+  再起動。パネルのクラッシュでバーがセッション全体を巻き込まない
+- 設定・IPC パーサーの Fuzzing とサニタイザ境界テスト
+  （`tests/fuzz-parsers.sh`、`tests/fuzz-asan.sh`）、およびヘルパーの
+  厳格なタイムアウト回帰テスト
+- 行番号付きの設定診断、設定のアトミック保存時の自動リロード、失敗時に
+  旧設定を維持するトランザクショナルなリロード、外部ツール向けの
+  バージョン付き JSON 状態/設定スナップショット。ワークスペース別・出力別の
+  レイアウト/隙間/マスター設定と、アニメーションライフサイクルフック
+- 出力/ワークスペースルールから参照する名前付きレイアウトプロファイルと、
+  出力別の背景・ボーダー・壁紙・パネル寸法テーマルール
+- デバイス別の libinput ポリシー（タッチパッド/マウスなどのタップ、
+  ドラッグ、自然スクロール、加速、スクロール/クリック方式、ボタンマップ、
+  キー入力中のタッチパッド無効化）。設定リロードで反映し、ルールを削除すると
+  元の状態へ復元。コネクタ名または EDID の make/model/serial で一致させる
+  モニタールール、VRR/Adaptive Sync、カーソルテーマ/サイズにも対応
+- 式で絞り込めるイベント→コマンドルール（ポリシー自動化）
+- 名前付き入力モードと、モード固有のキーバインド、リーダーキー、
+  `enter-mode`、モードごとのタイムアウト
+- アクセント、ボーダー、壁紙、パネル向けの意味論的テーマロール
+- バーの高さ、上下左右のマージン、バー背景色/前景色を設定可能
+- ウィンドウを開く/ワークスペース切り替え時のスライドアニメーション
+  （種類別の再生時間、名前付き cubic-bezier/スプリングカーブ、ウィンドウ別の
+  有効化・時間・カーブ上書き、開始オフセット）、
+  閉じる際のスケール/フェードスナップショット、視差効果低減時のフェード、
+  レイヤー化したソフトなウィンドウシャドウ、任意で有効にできる scenefx の
+  角丸と背景ブラー（ウィンドウとシェルサーフェス）、壁紙グラデーション色、
+  PNG 壁紙（cover/contain/stretch）、アート表示のオン/オフ設定
+- 出力ごとに 9 ワークスペース、フローティング、フルスクリーン、クリックで
+  フォーカス。任意のグローバル名をバー表示、バインド、IPC、ウィンドウルールで
+  利用可能。出力ごとのフローティングスクラッチパッドと、ワークスペース単位の
+  タブ付きウィンドウグループも使用可能
+- マルチモニタ対応: 各出力にバー/壁紙と独立したアクティブワークスペースを
+  持ち、パネルも出力ごとに自動起動。ワークスペースの出力固定、`wlr-randr`
+  による出力管理、設定の永続化、`wp_fractional_scale_v1` による
+  フラクショナルな Wayland スケーリング、整数倍の HiDPI パネルバッファ
+  スケーリングに対応
+- 外部プロセス向け拡張 API: 行イベント、リクエスト ID とケイパビリティを
+  持つ JSON-RPC、JSON イベント通知、設定フックとイベントルール、
+  バーへのカスタムステータス、ランチャー項目、自動化クライアント
+  `tessa-ctl`
+- ゲームやポインタルック向けの `relative-pointer-v1`
+- スクリプトからのポインタ操作と headless テスト向けの
+  `wlr-virtual-pointer-v1`
+- `pointer-constraints-v1` の locked/confined ポインタ。ウィンドウの
+  フォーカスに合わせて有効化
+- タッチパッドジェスチャ: 3 本指（設定可能）の横スワイプでワークスペース、
+  上スワイプでランチャー。それ以外の指の本数とピンチ/ホールドは
+  フォーカス中のクライアントへ転送
+- タッチ入力（パネル UI を含む）と tablet-v2 のペン/パッド対応
+  （筆圧、傾き、回転、ツールボタン、リング、ストリップ）
+- サードパーティクライアントの layer-shell ポップアップ（パネルのメニューや
+  ドロップダウン）
+- 外部 layer-shell シェル: Waybar、Wofi、Quickshell 互換のバーとランチャー、
+  出力ごとに 9 ワークスペースを持つ `ext-workspace-v1` グループ、
+  foreign-toplevel の出力追従、`ON_DEMAND` クリックフォーカス
+- `ext-session-lock-v1` によるセッションロック。`ext-idle-notify-v1`、
+  `idle-inhibit-v1`、出力電源管理にも対応し、swayidle や wlopm と連携可能
+- 設定ファイルでキーボードレイアウト/バリアント/オプションとキーリピートを
+  設定可能。`Super+R` で再読み込み
+- text-input-v3 + input-method-v2 による IME リレーと入力ポップアップの配置。
+  Fcitx5 + Mozc でランチャーおよび Wayland クライアントへの日本語入力を
+  headless 環境で確認済み
+- `xwayland-satellite` による XWayland。ルートレス X11 アプリを通常の Tessa
+  トップレベルとして管理し、起動したアプリへ `DISPLAY` を継承
+- XIM 統合: X11 クライアント向けに `XMODIFIERS` をエクスポートし、
+  必要なら `xim_start` で X ディスプレイ出現後に入力メソッドを起動
+- Zig + Cairo/Pango による統合パネル
+  - 墨と朱の壁紙
+  - ワークスペースピル、ウィンドウチップ、時計、CPU/RAM を表示する
+    フローティングタスクバー
+  - キーボード操作と IME 入力に対応した検索型ランチャー
+  - 月間カレンダーの時計ポップアップと、ロック/サスペンド/再起動/電源オフの
+    コマンドを設定できる電源メニュー
+  - `Super+V` で開き、クリックまたはキーボードで貼り付けられるメモリ上だけの
+    クリップボード履歴
+  - `wlr-screencopy` を使った範囲/全画面スクリーンショット UI（PNG 保存）
+  - `org.freedesktop.Notifications` サービス。アクションボタン、
+    `default` アクティベート、image-data/icon-name アイコン、Pango
+    マークアップ、置換/閉じる/期限切れ、フォーカス出力へのルーティングに
+    対応したトースト通知
+  - バッテリーとデフォルトルートのネットワーク表示
+  - MPRIS メディアチップと操作（`Super+M`）
+  - StatusNotifier トレイの watcher/host、アイコン描画、アクティベート
+    （`Super+Shift+T`）
+  - `wpctl` / `pactl` / `amixer` を使った音量表示とポップオーバー
+    （`Super+Shift+A`）、コマンド上書き設定つき
+  - `xdg-desktop-portal` 連携: `xdg-desktop-portal-wlr` と PipeWire による
+    画面共有のための screencopy、dmabuf、出力キャプチャソース、
+    image-copy capture、foreign-toplevel リスト
+- 状態/イベントを明示的に購読する行ベース IPC と `tessa-ctl` CLI
+- include とイベントフックに対応した行ベース設定ファイル
+
+Tessa 0.2.4 は Ubuntu 26.04 と Arch Linux 実機で、Zig 0.16.0、wlroots 0.19.2
+を使ってビルド・動作確認しています。確認は主に headless の pixman バックエンドで、
+`grim`、`wtype`、Fcitx5 + Mozc、`xwayland-satellite` 経由の X11 クライアントを
+使用しました。Arch 実機では通常セッションでの表示、キーボード、マウス、IME、
+ブラウザも確認しています。2 出力の
+headless 環境で、出力ごとのワークスペース/パネル、両出力のセッションロック、
+`wlr-randr` による出力管理も確認しています。イベントフック、イベント
+ストリーム、カスタムステータス、カスタムランチャー項目、設定再読み込みは
+`tests/smoke.sh`、`tests/output-persistence.sh`、パネルのスクリーンショットで
+確認しました。ワークスペースごとの master/mosaic/grid/columns レイアウト、
+2 倍 HiDPI パネル、フラクショナルな出力スケール変更、再起動後の出力
+モード/位置/スケール/レイアウト復元も
+`tests/smoke.sh`、`tests/output-persistence.sh`、`tests/layout-geometry.sh`、
+`tests/customization.sh`、`tests/layout-helper.sh`、
+`tests/layout-helper-v2.sh`、`tests/config-validation.sh`、
+`tests/config-watch.sh`、`tests/json-ipc.sh`、`tests/modes.sh`、
+`tests/panel-theme.sh`、
+`tests/panel-popovers.sh`、`tests/clipboard.sh`、`tests/screenshot.sh`、
+`tests/notifications.sh`、`tests/notification-routing.sh`、
+`tests/system-status.sh`、`tests/media.sh`、`tests/tray.sh`、
+`tests/audio.sh`、`tests/foreign-toplevels.sh`、`tests/animations.sh`、
+`tests/motion.sh`、`tests/motion-overrides.sh`、`tests/effects.sh`、
+`tests/rule-visuals.sh`、
+`tests/input.sh`、`tests/ime-keyboard.sh`、`tests/ext-workspace.sh`、
+`tests/external-shell.sh`、`tests/pointer-constraints.sh`、
+`tests/xim.sh`、`tests/fractional-scale.sh`、`tests/cursor-theme.sh`、
+`tests/linux-dmabuf.sh`、`tests/spawn-signals.sh`、`tests/xwayland-ready.sh`、
+`tests/kitty-startup.sh`、
+`tests/xwayland-kitty.sh`、`tests/workspace-pinning.sh`、
+`tests/output-rules.sh`、`tests/rule-expressions.sh`、`tests/event-rules.sh`、
+`tests/output-themes.sh`、`tests/theme-roles.sh`、`tests/reduced-motion.sh`、
+`tests/profiles.sh`、`tests/json-rpc.sh`、`tests/interaction.sh`、
+`tests/popups.sh`、`tests/portal.sh`、`tests/special-workspaces.sh`、
+`tests/scratchpad.sh`、`tests/window-groups.sh`、`tests/workspace-names.sh`、
+`tests/wallpaper-image.sh`、`tests/terminal-fallback.sh`、
+`tests/shell-v2.sh`、`tests/effect-helper.sh`、`tests/performance.sh`、
+`tests/rendering.sh`、`tests/tearing.sh`、
+`tests/config-editor.sh`、`tests/panel-recovery.sh`、`tests/ipc-version.sh`、
+`tests/helper-timeouts.sh`、`tests/fuzz-parsers.sh`、
+`tests/fuzz-asan.sh` で
+検証しています。0.2.5 のソースツリーは Zig 0.17.0、wlroots 0.20.2、
+scenefx 0.5 を対象とし、Arch Linux 実機の headless スイートが
+plain／scenefx の両構成で成功しています。ポータルの ScreenCast、トレイ、
+通知、ポインタ操作、scenefx の角丸描画も含みます。0.2.5 ではさらに
+`tests/layout-scrolling.sh`、`tests/layout-modes.sh`、
+`tests/layout-reorder.sh`、`tests/layout-config.sh`、
+`tests/extensions.sh`、`tests/extension-api.sh`、`tests/panel-modules.sh`、
+`tests/effect-v2.sh`、`tests/effect-cache.sh` も成功しています。新しいツールチェーンでの
+実 DRM/libinput セッション検証は未実施です。`tests/effects.sh` は
+`-Dscenefx=true` ビルドでのみ角丸を
+検査し、それ以外ではスキップします。Kitty と実 XWayland の統合テストは
+Kitty、`wlr-randr`、`xwayland-satellite` が無い場合にスキップします。
+`tests/xwayland-ready.sh` は偽のサテライトを使うため、`DISPLAY` の準備待ちは
+どの環境でも検証されます。ポータルのテストはポータルと PipeWire がインストール
+されている場合に ScreenCast を端から端まで実行し、なければスキップします。
+Arch Linux 実機の eDP-1 DRM セッションでキーボード／マウス、IME、
+XWayland クライアントを確認済みです。タッチパッドのデバイス別調整と VRR は
+[既知の制限](#既知の制限) に記載しています。
+[既知の制限](#既知の制限)も参照してください。
+
+## なぜもう 1 つのタイル型 WM なのか
+
+Tessa の目的は Hyprland を機能で上回ることではありません。より小さく、
+まとまりのあるデスクトップを目指しています。
+
+- **統合されたシェル。** バー、ランチャー、壁紙、タイル配置が 1 つの
+  プロジェクトにまとまっています。色と挙動が統一されているのは、それが
+  同じコードだからです。
+- **違うレイアウト。** マスター/スタックに加えて、渦巻き状の「テセラ」
+  モザイク、均等グリッド、等幅カラム、Niri 風スクロール列、Monocle、
+  Deck 型 Stacking があります（`Super+T` は設定したリストを巡回）。タイルは
+  ドラッグまたは IPC で並べ替えられます。Tessa という名前は
+  tessellation（タイル張り）に由来します。
+- **墨絵の視覚言語。** 藍色の紙、墨だまり、朱色の太陽、粒子、ガラスのような
+  フローティングバー。一般的なステータスバーにテーマを載せただけのものでは
+  ありません。
+- **小さく直接的な実装。** Zig + wlroots、Pango/GDBus/ミキサーコマンド用の
+  小さな C シム、行ベースの設定と IPC。余計なレイヤーをできるだけ挟みません。
+- **信頼性優先。** 設定は再起動前にオフライン検証でき、リロードは
+  トランザクショナル。ヘルパーは 100/200 ms の厳格なフォールバック契約を持ち、
+  内蔵パネルは監視されます。設定と IPC パーサーは Fuzz / ASan パスで検証します。
+- **JavaScript / TypeScript ランタイムなし。** ShojiWM のようにシェルを TSX
+  で自由に書くのではなく、固定された小さなシェルと設定を持ちます。ピクセル
+  単位で UI をプログラムしたいなら ShojiWM、アニメーション・ブラー・巨大な
+  プラグインエコシステムが欲しいなら Hyprland の方が適しています。Tessa は
+  「静かで統合されていて、Zig で Hack できるコンポジタ」という niche に
+  位置します。
+
+ターミナルをゼロから実装することは意図的に避けています。デフォルトは
+**kitty** です。foot が好みなら設定で `terminal = foot` にしてください。
+
+## ソースからビルド（開発向け）
+
+開発、Ubuntu 26.04 / Arch Linux 以外、または scenefx のカスタムビルドでは
+こちらを使います。通常利用なら、それぞれのディストリビューション向けの
+`.deb` または Arch の `tessa-git` パッケージで十分です。
+
+必要なもの:
+
+- Zig **0.17.0**
+- wlroots **0.20** の開発ファイル（`pkg-config --modversion wlroots-0.20`
+  で見つかること）
+- Wayland、xkbcommon、pixman、libdrm、libinput、libseat、libudev、EGL/GLES、
+  wayland-protocols 1.47 以降（生成 enum ヘッダー用）
+- パネルと通知用の Cairo / Pango / GLib (GIO) 開発ファイル
+- フォント: Inter、JetBrains Mono、Noto Sans CJK JP などの CJK フォント
+- 任意: [`xwayland-satellite`](https://github.com/Supreeeme/xwayland-satellite)
+  （X11 アプリ用。`xwayland = true` で自動起動）
+- 任意: Fcitx5 + Mozc（または `zwp_input_method_v2` を実装した他の IME）
+- 任意: 実行中の出力モード/位置/スケール変更用の `wlr-randr`
+- 任意: 角丸と背景ブラー用の [scenefx](https://github.com/wlrfx/scenefx)
+  **0.5**（`pkg-config --modversion scenefx-0.5`）
+- 任意: デスクトップ通知、トレイ、ポータル用の D-Bus セッション bus
+- 任意: 音量操作用の `wpctl`（PipeWire）、`pactl`（PulseAudio）、
+  `amixer`（ALSA）
+- 任意: 画面共有用の `xdg-desktop-portal`、`xdg-desktop-portal-wlr`、
+  PipeWire（下記の `tessa.portal` を配置）
+
+配布用パッケージ定義は `packaging/` と `debian/` にあります。
+`packaging/arch/PKGBUILD` と debhelper 用 `debian/` が、コンポジタ、パネル、
+CLI、セッションファイル、設定例、ポータル設定をインストールします。
+Debianバイナリパッケージを作る場合:
+
+```sh
+ZIG="$HOME/.local/zig-0.17.0/zig" ./scripts/build-deb.sh
+# 生成物: dist/tessa_<version>_<arch>.deb
+```
+
+`.deb` の定義は下流のパッケージング用に残していますが、公開済みの Debian
+パッケージは 0.2.4 が最後です。`debian/control` は
+`libwlroots-0.20-dev` を要求するよう更新しています。
+
+詳細は [packaging/README.md](/ja/docs/) を参照してください。
+
+画面共有には `xdg-desktop-portal`、`xdg-desktop-portal-wlr`、PipeWire が
+必要です。同梱の `packaging/portal/tessa.portal` をシステムへ入れると
+`/usr/share/xdg-desktop-portal/portals/tessa.portal` になり、
+`XDG_CURRENT_DESKTOP=Tessa` で Screenshot / ScreenCast を wlr バックエンドへ
+振り分けます。xdpw にはソース選択が必要です。モニターが 1 台なら
+`~/.config/xdg-desktop-portal-wlr/config` に `chooser_type=none` と
+`output_name=<出力名>` を設定してください。
+
+Ubuntu 26.04 の場合、ディストリビューションの Zig が古ければ上流の Zig 0.17 を
+導入し、開発ヘッダーを入れます:
+
+```sh
+sudo apt install build-essential pkg-config git \
+  libwayland-dev wayland-protocols libwlroots-0.20-dev \
+  libxkbcommon-dev libpixman-1-dev libdrm-dev libinput-dev \
+  libseat-dev libudev-dev libegl-dev libgles2-mesa-dev \
+  libcairo2-dev libpango1.0-dev libglib2.0-dev libfontconfig1-dev \
+  fonts-inter fonts-jetbrains-mono fonts-noto-cjk \
+  xwayland xauth xterm fcitx5 fcitx5-mozc
+```
+
+Arch Linux では上記「Arch Linux へのインストール」の手順で公式の `zig`、
+`wlroots0.20` を導入してください。`scenefx` 0.5 は任意の
+`-Dscenefx=true` ビルドだけに必要です。
+`scripts/build.sh` は Zig 0.17.x を要求し、`ZIG=/path/to/zig` で
+上書きできます。このツリーには Zig 0.16 や wlroots 0.19 を使えません。
+
+`xwayland-satellite` はすべてのディストリビューションにパッケージされている
+わけではありません。`PATH` の通った場所（例:
+`~/.local/bin/xwayland-satellite`）にインストールするか、
+`TESSA_XWAYLAND_BIN` に絶対パスを設定してください。Tessa は wlroots 内蔵の
+XWayland ではなく satellite を使います。satellite がルートレス X11
+ウィンドウを通常の xdg-shell トップレベルとしてコンポジタに渡します。
+
+wlroots 0.20 を `/usr/local` 以下にソースからインストールした場合は、
+`.pc` ファイルと共有ライブラリが見つかることを確認してください:
+
+```sh
+pkg-config --modversion wlroots-0.20
+ldconfig -p | grep wlroots
+```
+
+ビルド:
+
+```sh
+chmod +x scripts/*.sh scripts/tessa-session   # 実行権限が失われている場合
+./scripts/build.sh -Doptimize=ReleaseSafe
+```
+
+角丸と背景ブラーは scenefx を使うオプトイン・ビルドです。scenefx 0.5
+（wlroots 0.20 系）を導入してから次を実行します:
+
+```sh
+./scripts/build.sh -Doptimize=ReleaseSafe -Dscenefx=true
+```
+
+このバイナリはシーンとレンダラーが scenefx の GLES2 経路に切り替わり、
+`WLR_RENDERER=pixman` は使えません。既定ビルドは upstream wlroots の
+シーンを使い、GL とソフトウェアレンダリングの両方をサポートします。
+scenefx をシステム以外の prefix に入れた場合は、ビルド時と実行時に
+pkg-config とライブラリのパスを設定してください。
+
+生成されるもの:
+
+- `zig-out/bin/tessa` — コンポジタ
+- `zig-out/bin/tessa-panel` — シェルパネル（出力ごとに 1 プロセス、Tessa が自動起動）
+- `zig-out/bin/tessa-ctl` — スクリプト/拡張向けの状態・イベント・自動化クライアント
+
+生成済みの Wayland プロトコルヘッダーは `protocol/` にコミットされているので、
+wlroots 側に `xdg-shell-protocol.h` がなくてもビルドできます。
+
+## 実行
+
+### TTY から（最初のテストに推奨）
+
+SSH 越しではなく、対象マシンのコンソールにログインし、アクティブな仮想
+ターミナルから実行します。パッケージ版なら:
+
+```sh
+tessa
+```
+
+ソースビルドなら:
+
+```sh
+cd /path/to/Tessa
+PATH="$PWD/zig-out/bin:$PATH" ./zig-out/bin/tessa
+```
+
+wlroots が DRM バックエンドと libinput を自動検出します。Tessa は `PATH` から
+出力ごとに 1 つずつ `tessa-panel` を起動するので、`zig-out/bin` を通すか、
+バイナリをインストールしてください。デフォルトのターミナルは `kitty` です。
+インストールするか、設定で `terminal = foot` に変更してください。
+
+### ディスプレイマネージャ / セッションファイル
+
+バイナリパッケージはセッションエントリを導入済みです。この手順はソース
+ビルドから実行する場合だけ使います:
+
+```sh
+# ~/.local にインストール
+./scripts/install-session.sh
+
+# システム全体にインストール
+sudo PREFIX=/usr/local ./scripts/install-session.sh
+```
+
+ログアウトし、GDM / SDDM / greetd で **Tessa** を選択してください。セッション
+ファイルは `tessa-session` を実行し、自分自身のディレクトリを `PATH` の先頭に
+追加してから `tessa` を起動します。
+
+### SSH 越しの headless 開発
+
+開発で使っている headless ワークフローです。まずコンポジタを起動します:
+
+```sh
+./scripts/run-headless.sh
+```
+
+別のシェルでスクリーンショットを撮ります:
+
+```sh
+./scripts/screenshot.sh /tmp/tessa.png
+```
+
+headless バックエンドには物理入力デバイスがないため、Tessa は標準 XKB
+キーマップを持つフォールバックキーボードを作成します。これによりパネル、
+IME、XWayland が正しく起動できます。マウスや状態変更は IPC、キーボード入力は
+`wtype` で注入します:
+
+```sh
+XDG_RUNTIME_DIR=/tmp/tessa-headless WAYLAND_DISPLAY=wayland-0 \
+  wtype "foot"
+XDG_RUNTIME_DIR=/tmp/tessa-headless WAYLAND_DISPLAY=wayland-0 \
+  wtype -k Return
+```
+
+`wtype` は virtual-keyboard プロトコルで接続し、現在キーボードフォーカスを
+持つサーフェスへ入力します。TTY なしで IME やパネルのキーボード経路を
+テストするときにも使います。
+
+headless ワークフローの詳細は
+[docs/DEVELOPMENT.ja.md](/ja/docs/development/)、拡張 API は
+[docs/EXTENDING.ja.md](/ja/docs/extending/) を参照してください。安定版 v1 の
+契約は [docs/EXTENSION-API.ja.md](/ja/docs/extension-api/) にあります。
+
+## 入力メソッド（IME）
+
+![ランチャーでの日本語プリエディットと Fcitx5 の候補](/images/ime.png)
+
+Tessa は `zwp_text_input_v3`（クライアント側）と `zwp_input_method_v2`
+（入力メソッド側）を実装し、フォーカス、周辺テキスト、カーソル矩形、
+プリエディット、確定文字列、削除をリレーします。入力メソッドのポップアップ
+サーフェス（候補ウィンドウ）はテキストカーソルの下に配置され、画面端では
+クランプされます。
+
+**Fcitx5 + Mozc** で動作確認しています:
+
+```sh
+sudo apt install fcitx5 fcitx5-mozc
+```
+
+Tessa セッション内で Fcitx5 を起動してください（`TESSA_STARTUP` や
+コンポジタの spawn コマンドなど）。Wayland ネイティブのクライアントでは
+`GTK_IM_MODULE` / `QT_IM_MODULE` を設定する必要はありません。これらは
+Wayland の text-input プロトコルを使うためです。X11 クライアント向けには
+Tessa が `XMODIFIERS=@im=fcitx`（`xim_server` で変更可能）をエクスポートし、
+`xim_start = fcitx5 -d` を設定すると X ディスプレイの準備後に XIM サーバを
+自動起動します。Fcitx5 での登録は確認済みですが、実際の確定処理は各 X11
+ツールキットの XIM クライアントに依存します。
+
+Fcitx5 は実行中キーボードグラブを保持します。Tessa はキーイベントをグラブへ
+転送し、入力メソッドの仮想キーボード出力をフォーカス中のクライアントへ戻します。
+そのため `text-input-v3` を使わないアプリ（Firefox など）でもキー入力を受け取れ
+ます。仮想キーボードの作成・破棄時にキーボードフォーカスを再入力しないため、
+text-input の enable/activate ループも発生しません。
+
+`Super+D` でランチャーを開いて入力すると、プリエディットが検索欄に描画され、
+その下に Fcitx の候補ポップアップが表示されます。`Enter` で選択を確定し、
+確定した文字列がランチャーの検索語に追加されます。
+
+## X11 アプリケーション
+
+![xwayland-satellite 経由で動く xeyes と xclock](/images/xwayland.png)
+
+Tessa は Wayland ソケットの準備後に `xwayland-satellite` を起動し、選んだ
+ディスプレイを `DISPLAY` としてエクスポートします。X11 アプリケーションは
+ルートレスで動作し、各 X11 トップレベルは通常の Tessa ウィンドウとして
+タイル、ワークスペース、フォーカス、タスクバーに参加します。Tessa は
+`xdg-decoration` をサーバーサイドモードで広告するため、satellite は独自の
+タイトルバーを描画しません。代わりに Tessa のアクセントカラーのボーダーが
+使われます。
+
+デフォルトではディスプレイを自動選択します（`xwayland_display = auto`）。
+`:0` から順に、ソケットが存在しないディスプレイを選びます。必要なら `:1`
+などの明示的な値を設定してください。XWayland を無効にするには
+`xwayland = false` または `TESSA_NO_XWAYLAND=1` を使います。satellite が
+`PATH` の外にある場合は
+`TESSA_XWAYLAND_BIN=/path/to/xwayland-satellite` を設定してください。
+
+XWayland のスケーリングは `xwayland-satellite` に委譲します。Tessa は
+`wp_fractional_scale_v1` と `wp_viewporter` を広告するため、satellite は
+X11 クライアントをフラクショナルな出力スケールに合わせて拡大できます。
+XSETTINGS を無視するツールキットは 1 倍のまま表示される場合があります。
+フラクショナルな X11 表示は satellite を導入した環境で追加検証が必要です。
+
+## ロックと idle
+
+Tessa は `ext-session-lock-v1`、`ext-idle-notify-v1`、`idle-inhibit-v1` を
+実装しています。ロッククライアントと idle デーモンは別のプログラムです:
+
+```sh
+sudo apt install swaylock swayidle
+```
+
+デフォルトでは `Super+Escape` が `swaylock` を起動します。別のロッカーを
+使う場合は `bind = SUPER+Escape spawn <command>` で変更してください。ロック中は
+通常のデスクトップのシーンツリーが隠れ、仮想キーボードからの入力は無視され、
+ロックサーフェスがキーボード/ポインタフォーカスを受け取ります。ロック
+クライアントがロック中に終了した場合、Tessa はデスクトップを露出させず
+セッションを終了します。
+
+`swayidle` と `wlopm` を組み合わせると、idle 時のロックと DPMS を自動化
+できます:
+
+```sh
+sudo apt install wlopm
+swayidle -w \
+  timeout 300 'swaylock -f' \
+  timeout 600 'wlopm --off "*"' \
+  resume 'wlopm --on "*"'
+```
+
+idle 通知と inhibitor は動作し、動画プレイヤーなどは `idle-inhibit-v1` で
+idle を抑制できます。Tessa は出力電源管理プロトコルも実装しているため、
+`wlopm` で出力をオフ/オンできます。
+
+## マルチモニタ
+
+![独立したバーとワークスペースを持つ 2 つの headless 出力](/images/multi-monitor.png)
+
+各出力に独立した壁紙、バー、アクティブワークスペースがあります。
+`Super+1` … `Super+9` はフォーカス中の出力のワークスペースを変更します。
+`workspace_pin = OUTPUT WORKSPACE` を設定するとその対象が上書きされ、
+ショートカットとバーは常に固定先のモニタへ切り替えます。ピン留めした
+ワークスペースへウィンドウを移動すると、その出力へ移ります。
+バーをクリック/スクロールすると、そのモニタのワークスペースを変更し、
+その出力へフォーカスします。ランチャーはフォーカス中の出力に開き、新しい
+ウィンドウもそこに配置されます。`Super+Shift+H/J/K/L` はまず同じ出力内で
+入れ替え、その方向にウィンドウがない場合はフォーカス中のウィンドウを隣の
+モニタへ移動します。
+
+Tessa は `TESSA_PANEL_OUTPUT=<name>` を設定して、出力ごとに 1 つの
+`tessa-panel` を自動起動します。自動起動を無効にした場合（`panel = false`
+または `TESSA_NO_PANEL=1`）は、出力ごとに手動で起動してください:
+
+```sh
+TESSA_PANEL_OUTPUT=HEADLESS-1 tessa-panel
+```
+
+出力のモード、位置、スケール、変換は `wlr-randr` で変更できます。Tessa は
+`wlr-output-management-unstable-v1` を実装しています。適用した設定は
+`$XDG_CONFIG_HOME/tessa/outputs.conf`（または
+`~/.config/tessa/outputs.conf`）に保存され、出力が再び現れたときに復元
+されます。保存先はメイン設定の `output_config` または
+`TESSA_OUTPUT_CONFIG` で変更できます。左と中央のように明示的に配置する場合は、
+論理レイアウト座標で位置を指定します（コネクタ名は `wlr-randr` の表示に
+合わせてください）:
+
+```sh
+wlr-randr --output DP-1 --pos 0,0
+wlr-randr --output HDMI-A-1 --pos 2560,0
+```
+
+変更は即座に保存されます。`wp_fractional_scale_v1` に対応する
+Wayland クライアントには、実行中の変更を含めて正確な出力スケールが通知
+されます。プロトコル非対応のクライアントは出力スケールの切り上げ値を
+使います。パネルは切り上げ値を Cairo の整数バッファスケールとして使うため、
+整数倍では鮮明、フラクショナルではダウンサンプルされます。XWayland の
+スケーリングは `xwayland-satellite` が同じフラクショナルスケールを利用して
+処理します。
+
+## 外部バーとランチャー
+
+既定のシェルは引き続き Tessa Panel です（`panel = true`）。別デスクトップの
+layer-shell バーやランチャーを使う場合は、統合パネルを無効にして `startup`
+から起動します:
+
+```ini
+panel = false
+startup = waybar
+```
+
+`panel = false` にすると Tessa の壁紙、通知、内蔵ランチャーも無効になります。
+必要なら別の壁紙・通知デーモンを起動してください。
+
+Waybar 0.15 は標準の layer-shell と `ext-workspace-v1` で動作します。例:
+
+```jsonc
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "modules-left": ["ext/workspaces"],
+  "modules-center": ["wlr/taskbar"]
+}
+```
+
+Tessa は出力ごとに 1 つのワークスペースグループと、その中に 9 個の
+ワークスペースを公開します。名前（設定名、なければ `1`…`9`）、active/urgent
+状態、activate 要求をサポートします。`wlr-foreign-toplevel-management` は
+タスクバー向けに title、app_id、アクティブ化、close、fullscreen を提供し、
+ウィンドウが出力間を移動したときも追従します。
+
+Wofi などの layer-shell ランチャーは追加設定なしで動作します。内蔵ランチャー
+のキーバインドを置き換える例:
+
+```ini
+bind = SUPER+D spawn wofi --show drun
+```
+
+フルスクリーンより前面に表示したい場合は、Wofi の layer を `overlay` にして
+ください。
+
+Quickshell のパネルは layer-shell を使います。`Quickshell.WindowManager` は
+ext-workspace のグループを、`ToplevelManager` は foreign-toplevel を読みます。
+`focusable: true` の `PanelWindow` は `ON_DEMAND` キーボードフォーカスを要求し、
+map 時ではなくクリック時にフォーカスを得ます。
+
+共存時の注意:
+- Tessa Panel と外部バーを同じ辺に置くと、両方が領域を予約します。1 本の
+  バーにする場合は `panel = false` で片方を無効にしてください。別の辺なら
+  共存できます。
+- Tessa Panel、Waybar、Quickshell の `SystemTray` は
+  `org.kde.StatusNotifierWatcher` を所有しようとします。tray が埋まるのは
+  1 つだけです。外部シェル側で tray を持つ場合は Tessa Panel を無効にして
+  ください。
+- Waybar の minimize/maximize 要求はプロトコル上は受理しますが、Tessa に
+  minimize/maximize 状態がないため no-op です。
+- GTK3 のバー/ランチャーはフラクショナルスケーリング時に整数倍で描画されます。
+  これはクライアント側の制限です。
+
+## 拡張
+
+![外部ステータスとカスタムランチャー項目](/images/extensions.png)
+
+Tessa はプラグイン VM を埋め込みません。拡張はコンポジタの Unix ソケット API
+を話す通常のプロセスで、任意の言語で書けます。`tessa-ctl` が状態
+スナップショット、構造化イベント、ステータス、コマンド操作を公開します。
+
+```sh
+tessa-ctl state
+tessa-ctl state --json
+tessa-ctl config
+tessa-ctl config --json
+tessa-ctl config-check
+tessa-ctl events window-focus
+tessa-ctl status weather "Tokyo 18C"
+tessa-ctl layout grid
+tessa-ctl dispatch reload
+```
+
+`state --json` と `config --json` はツール向けのスキーマバージョン付き
+スナップショットを返します。`config-check` はファイル名/行番号付きの診断を
+表示し、読み込み済み設定にエラーがある間は非ゼロで終了します。設定から
+ログイン時のコマンド起動やイベントへの反応もできます。
+
+```ini
+startup = fcitx5 -d
+hook = window-open notify-send "Window opened" "$TESSA_TITLE"
+hook = animation-done echo "$TESSA_ARG $TESSA_WINDOW_ID" >> ~/.cache/tessa-animations.log
+hook = close-animation-done echo "closed $TESSA_WINDOW_ID" >> ~/.cache/tessa-animations.log
+launcher_entry = Notes | foot -e nvim ~/notes.md
+include = /home/you/.config/tessa/launcher-entries.conf
+```
+
+パネルは最大 8 件の拡張ステータスを表示し、クリック時にコマンドを実行できます。
+イベントスキーマ、フックの環境変数、ステータス API の詳細は
+[docs/EXTENDING.ja.md](/ja/docs/extending/) にあります。
+
+## キーバインド
+
+| バインド | 動作 |
+| --- | --- |
+| `Super+Return` | ターミナル（設定の `terminal`） |
+| `Super+D` | ランチャー |
+| `Super+V` | クリップボード履歴 |
+| `Super+Shift+S` | 範囲/全画面スクリーンショット |
+| `Super+M` | MPRIS メディア操作 |
+| `Super+Shift+T` | StatusNotifier トレイ |
+| `Super+Shift+A` | 音量操作 |
+| `Super+T` | `layout_cycle` を巡回（既定はマスター → モザイク → グリッド → カラム） |
+| `Super+Q` | フォーカス中のウィンドウを閉じる |
+| `Super+Shift+E` | Tessa を終了 |
+| `Super+R` | 設定を再読み込み |
+| `Super+1` … `Super+9` | ワークスペースを切り替え |
+| `Super+Shift+1` … `Super+Shift+9` | ウィンドウをワークスペースへ移動 |
+| `Super+H/J/K/L` | 左/下/上/右のウィンドウへフォーカス |
+| `Super`+左ドラッグ | タイルを並べ替え（Scrolling ではカラムを挿入） |
+| `Super`+ホイール | Scrolling の viewport をスクロール |
+| `Super+Shift+H/J/K/L` | その方向のウィンドウと入れ替え。ない場合は隣の出力へ移動 |
+| `Super+Space` | フローティング切り替え |
+| `Super+F` | フルスクリーン切り替え |
+| `Super+grave` | スクラッチパッド表示切り替え |
+| `Super+Shift+grave` | フォーカス中ウィンドウをスクラッチパッドへ移動／復帰 |
+| `Super+Shift+G` | ワークスペースのタイルウィンドウをグループ化／解除 |
+| `Super+Escape` | セッションをロック（`swaylock` を実行。要インストール） |
+| `Super+Tab` / `Super+Shift+Tab` | ウィンドウを巡回。グループのフォーカス中はタブを巡回 |
+| `Super+Ctrl+H/L` | マスター領域の比率を縮小/拡大 |
+| `Super+Alt+H/L` | フローティングウィンドウの幅を縮小/拡大 |
+| `Super+Alt+J/K` | フローティングウィンドウの高さを拡大/縮小 |
+
+マウス:
+
+- ウィンドウをクリックするとフォーカスします。タスクバーのチップをクリック
+  するとそのウィンドウへフォーカスします。
+- タスクバーのチップを右クリックするとそのウィンドウを閉じます。
+- バーの上でスクロールするとワークスペースを巡回します。
+- `Super+左ドラッグ` でフローティングウィンドウを移動、`Super+右ドラッグ` で
+  リサイズします。
+- クライアントサイドのタイトルバードラッグもフローティングウィンドウでは
+  使えます。
+- 花びら/`TESSA` のマークをクリックするか、`Super+D` でランチャーを開きます。
+- `TESSA` マークを右クリックすると電源メニュー、時計をクリックすると
+  カレンダーが開きます。`tessa-ctl panel calendar|power|clipboard` でも
+  開けます。
+- ランチャー内では入力で検索、`Up`/`Down`、`Enter`、`Esc`、または行の
+  クリックで操作します。
+- カレンダーでは `Left`/`Right` または矢印ボタンで月を移動し、`Home` で
+  今日に戻ります。電源メニューでは `Up`/`Down`、`Enter`、`Esc`、または
+  クリックで操作します。
+- `Super+V` でクリップボード履歴が開きます。`Up`/`Down` と `Enter`、
+  またはクリックで選んだ項目をクリップボードへ戻せます。履歴は最大 8 件、
+  各 16 KiB までのテキストで、メモリ上にのみ保持します。
+- `Super+Shift+S` でスクリーンショット UI が開きます。ドラッグで範囲選択、
+  クリックで全画面、`Enter` でも全画面を保存し、`Esc` でキャンセルします。
+  PNG は `screenshot_dir`（既定 `~/Pictures/Screenshots`）へ保存されます。
+- MPRIS プレイヤーが動いているとバーにメディアチップが表示されます。
+  クリックまたは `Super+M` で前へ/再生・一時停止/次へを操作できます。
+  キーボードでは `Space`、`Left`、`Right` も使えます。
+- StatusNotifier の項目はバーにアイコンとして並びます。左クリックで
+  アクティベート、右クリックまたは `Super+Shift+T` でトレイポップオーバーを
+  開きます。`Up`/`Down` で選択し `Enter` でアクティベートします。DBusMenu
+  によるコンテキストメニューは未対応です。
+- `wpctl`、`pactl`、`amixer` のいずれかがあるとバーに音量が表示されます。
+  クリックまたは `Super+Shift+A` で開き、`Up`/`Down` で音量、`m` でミュート、
+  `Esc` で閉じます。`volume_status`、`volume_up`、`volume_down`、
+  `volume_mute` でコマンドを上書きできます。
+
+## 設定
+
+サンプルをコピーします:
+
+```sh
+mkdir -p ~/.config/tessa
+cp config/config.example ~/.config/tessa/config
+```
+
+開発機で使っている完全な設定は `examples/vermilion-ink.config` にあります。
+
+形式は `key = value` です。`#` で始まる行はコメントです。実行中に `Super+R`
+で設定を再読み込みできます。エラーのあるリロードは拒否され、以前の設定が
+維持されます。`tessa-ctl config-check` で診断を確認できます。主なキー:
+
+| キー | 意味 |
+| --- | --- |
+| `terminal` | `Super+Return` と `Terminal=true` の desktop アプリで使うコマンド |
+| `gaps` | タイルウィンドウ間の隙間 |
+| `outer_gaps` | タイル領域の外周の隙間 |
+| `border_width` | アクティブ/非アクティブの枠の太さ |
+| `master_ratio` | マスター領域の比率（0.15–0.9） |
+| `master_count` | マスター列に縦積みするウィンドウ数 |
+| `mosaic_ratio` | モザイクのスライス比率（0.25–0.85） |
+| `mosaic_min_size` | グリッドへ切り替える前の最小モザイクタイル |
+| `grid_columns` | グリッドの固定列数。`0` は `ceil(sqrt(n))` |
+| `default_column_width` | Scrolling のカラム幅: `50%`、`0.5`、固定ピクセル |
+| `column_width_presets` | `column-width-cycle` が使うカンマ区切りの幅 |
+| `center_focused_column` | Scrolling のフォーカス方針: `never`、`always`、`on-overflow` |
+| `animation_view_ms` | Scrolling viewport のスライド時間（0–1000 ms） |
+| `animation_view_curve` | Scrolling viewport のカーブ |
+| `layout_cycle` | `Super+T` が巡回するレイアウトのカンマ区切りリスト |
+| `extension` | 監視付き拡張のマニフェスト（`id=…; command=…; permissions=…`） |
+| `panel_modules` | 作成するパネル要素（`bar`、`launcher`、`notifications`、`popovers` など） |
+| `layout_helper` | 出力ごとに 1 つ起動する非同期レイアウトヘルパーのコマンド |
+| `layout_helper_timeout` | ヘルパー応答のタイムアウト（ミリ秒、10–1000） |
+| `layout` | 既定レイアウト: `master`、`mosaic`、`grid`、`columns`、`scrolling`、`monocle`、`stacking`/`deck`、`custom` |
+| `layout_1` … `layout_9` | 保存済みの上書きがないワークスペースの初期レイアウト |
+| `workspace-rule` | ワークスペース別のレイアウト/隙間/マスター上書きとプロファイル |
+| `output-rule` | コネクタ名または EDID で一致させる出力別のレイアウト/チューニング/テーマ/VRR 上書き |
+| `profile` | ルールから参照する名前付きレイアウト/チューニングプロファイル |
+| `event-rule` | 条件付きイベント→コマンドルール |
+| `theme-role` | コンポジタとパネルで共有する意味論的カラー |
+| `workspace_pin` | ワークスペースを出力に固定: `workspace_pin = eDP-1 3`（繰り返し可） |
+| `workspace-name` | ワークスペースのグローバル名: `workspace-name = 2 Code`（繰り返し可） |
+| `corner_radius` | ウィンドウの角丸半径（0〜64。scenefx ビルド） |
+| `blur` | 半透明サーフェスの背景ブラー（scenefx ビルド） |
+| `blur_radius` | ブラー半径（1〜32） |
+| `blur_passes` | ブラー品質のパス数（1〜5） |
+| `panel` | `tessa-panel` を自動起動 |
+| `xwayland` | `xwayland-satellite` を起動し `DISPLAY` をエクスポート |
+| `xwayland_display` | `auto`、または `:0` などの明示的なディスプレイ |
+| `xim` | `XMODIFIERS` を設定し XIM サーバを任意で起動 |
+| `xim_server` | `XMODIFIERS` に使う XIM サーバ名（既定 `fcitx`） |
+| `xim_start` | X ディスプレイ出現後に起動する任意コマンド |
+| `gestures` | コンポジタのタッチパッドスワイプを有効化 |
+| `gesture_fingers` | ワークスペース/ランチャースワイプの指の本数（2–5） |
+| `gesture_workspace_threshold` | ワークスペース切り替えの横スワイプ量 |
+| `gesture_launcher_threshold` | ランチャーを開く上スワイプ量 |
+| `touch` | タッチ入力デバイスを受け付ける |
+| `tablet` | tablet-v2 のツールとパッドを有効化 |
+| `pointer_constraints` | `pointer-constraints-v1` を有効化 |
+| `cursor_theme` | Xcursor テーマ名。空ならシステム既定 |
+| `cursor_size` | カーソルサイズ（論理ピクセル、16〜96） |
+| `input` / `input-rule` | デバイス別 libinput ポリシー。繰り返し可 |
+| `kb_layout` | XKB レイアウト（例: `us`、`us,de`） |
+| `kb_variant` | XKB バリアント（任意） |
+| `kb_options` | XKB オプション（例: `grp:alt_shift_toggle`） |
+| `kb_model` | XKB モデル（任意） |
+| `kb_rules` | XKB ルールファイル（任意） |
+| `repeat_rate` | キーリピートの速度（回/秒） |
+| `repeat_delay` | キーリピート開始までの待ち時間（ミリ秒） |
+| `accent` | ボーダー、バー、ランチャーのアクセント色 |
+| `bg` | 壁紙のベース背景色 |
+| `wallpaper_image` | PNG 壁紙パス。グラデーション／装飾を置換 |
+| `wallpaper_fit` | `cover`、`contain`、`stretch` の画像フィット |
+| `font` | パネルの UI フォントファミリー |
+| `include` | 別の設定ファイルを読み込む |
+| `startup` | 起動時に 1 回実行するコマンド |
+| `hook` | コンポジタイベントで実行するコマンド |
+| `launcher_entry` | ランチャー項目を追加（`名前 \| コマンド`） |
+| `output_config` | 出力モード/位置/スケール/変換とレイアウト上書きの保存先 |
+| `bar_height` | バーの高さ（32〜96 論理ピクセル） |
+| `bar_top_margin` | バーの上端からの距離（0〜64） |
+| `bar_side_margin` | バーの左右マージン（0〜128） |
+| `panel_bg` | バーの背景色 |
+| `panel_fg` | バーの主要テキスト色 |
+| `power_lock` | 電源メニューのロックで実行するコマンド |
+| `power_suspend` | サスペンドのコマンド（既定 `systemctl suspend`） |
+| `power_reboot` | 再起動のコマンド（既定 `systemctl reboot`） |
+| `power_off` | 電源オフのコマンド（既定 `systemctl poweroff`） |
+| `screenshot_dir` | スクリーンショット PNG の保存先（既定 `~/Pictures/Screenshots`） |
+| `border_active` | フォーカス中ボーダー色（既定は `accent`） |
+| `border_inactive` | 非フォーカス時ボーダー色 |
+| `window-rule` | 宣言的ルール。詳細はカスタマイズガイド参照 |
+| `layer-rule` | レイヤーシェルルール。詳細はカスタマイズガイド参照 |
+| `workspace-rule` | ワークスペース別のレイアウト、隙間、マスター比率 |
+| `mode` | 後続の `bind` が属する名前付き入力モードを開始 |
+| `leader` | `leader` モードへ入るリーダーキーコード |
+| `leader_timeout` | リーダーモードのタイムアウト（ミリ秒） |
+| `mode_timeout` | 現在の名前付きモードのタイムアウト（ミリ秒） |
+
+追加のバインドには XKB keysym 名を使います:
+
+```ini
+bind = SUPER+Return terminal
+bind = SUPER+1 workspace 1
+bind = SUPER+SHIFT+1 move-to-workspace 1
+bind = SUPER+h focus left
+bind = SUPER+SHIFT+h move left
+bind = SUPER+ctrl+h ratio -0.03
+```
+
+利用可能なアクション: `terminal`、`spawn`、`close`、`quit`、`workspace`、
+`move-to-workspace`、`focus`、`move`、`toggle-float`、`toggle-fullscreen`、
+`toggle-scratchpad`、`move-to-scratchpad`、`special`/`toggle-special`、
+`move-to-special`、`toggle-group`、`group-next`、
+`group-prev`、`group-add`、`group-remove`、
+`focus-next`、`focus-prev`、`launcher`、`clipboard`、`screenshot`、`media`、
+`tray`、`audio`、`reload`、`ratio`、`toggle-layout`、
+`set-layout`、`resize-width`、`resize-height`、`enter-mode`。Scrolling 用に
+`focus-column-left/right/first/last`、`move-column-left/right/first/last`、
+`move-window-up/down`、`consume-window`、`expel-window`、
+`column-width-cycle[-back]`、`column-width-set <width>`、
+`column-width-maximize`、`center-column` も利用できます。
+
+`Super+T` はフォーカス中のワークスペースで `layout_cycle` を巡回します
+（既定は従来の 4 レイアウト）。実行中に選んだレイアウトは出力・
+ワークスペースごとに保持され、`outputs.conf` に保存されます。`layout_N` は
+保存済み・実行中の上書きがないワークスペースの初期値だけを設定します。
+設定の再読み込みでは、上書きしていないワークスペースだけが更新され、
+実行中の選択は維持されます。`resize-width` と `resize-height` は
+フォーカス中のフローティングウィンドウをピクセル単位の差分でリサイズします。
+
+タイルウィンドウのフォーカス中に `Super`+左ドラッグすると並べ替えられます。
+別のウィンドウ上で離すとその前/後へ挿入され、ドラッグ中は挿入先が
+ハイライトされます。Scrolling ではカラム全体が移動し、`Super`+ホイールで
+カラム列をスクロールします。フローティングとフルスクリーンでは無効です。
+`swap` と `reorder` の IPC コマンドはフラットなタイル順が対象で、Scrolling
+のワークスペースでは拒否されます。代わりに `column-move`、`window-move`、
+ドラッグを使ってください。
+
+ウィンドウルールは 1 行 1 ルールです。app-id、タイトル、出力を `*`/`?` の
+パターンでマッチし、アクションを順に適用します。
+
+```ini
+window-rule = app-id=pavucontrol; float=true
+window-rule = title=Picture-in-Picture; float=true; position=40,40
+window-rule = app-id=firefox; workspace=2
+window-rule = title=GIMP*; float=false
+window-rule = match=app ~ "^firefox$" && title !~ "Private|Incognito"; workspace=2
+window-rule = title=Chat*; border-active=#4cc9f0; border-inactive=#1b2a41
+window-rule = app-id=mpv; opacity=0.9; border-width=0; corner-radius=0
+window-rule = title=Picture-in-Picture; opacity=0.85; corner-radius=14; blur=true
+```
+
+ルールはウィンドウのマップ時と設定再読み込み時に評価されます。装飾系
+アクション（色、不透明度、角丸、ブラー、影、ボーダー幅）とウィンドウ別
+モーション上書き（`animation`、`animation-ms`、`animation-curve`、
+種類別キー）はタイトルまたは
+app-id の変更時にも再適用され、構造系アクションは次回のマップ/
+リロードまで待ちます。レイヤーシェルは `layer-rule` の `namespace`、
+`output`、`layer`、`opacity`、`corner-radius`、`blur` で設定できます。
+`tessa-ctl config` で解析済みルール、`tessa-ctl state` で実効値を確認でき
+ます。完全なリファレンスは
+[docs/CUSTOMIZATION.ja.md](/ja/docs/customization/) にあります。
+
+入力モードはバインドをまとめ、`enter-mode` で有効化します。
+
+```ini
+mode = resize
+bind = h resize-width -30
+bind = l resize-width 30
+bind = Escape enter-mode default
+
+mode = default
+bind = SUPER+SHIFT+r enter-mode resize
+```
+
+モード中は Super なしでもそのモードのバインドがマッチします。グローバル
+バインドは引き続き有効で、未割り当てのキーはフォーカス中のクライアントへ
+渡ります。スクリプトからは `tessa-ctl mode resize` で切り替えられます。
+アクティブモードは `tessa-ctl state` の `MODE <name>` に出ます。
+
+ワークスペース別の調整も同じ `key=value; ...` 形式です。
+
+```ini
+workspace-rule = ws=2; layout=grid; gaps=4; outer-gaps=8; master-ratio=0.65
+```
+
+`layout = custom` でカスタムタイルを選べます。Tessa は出力ごとに非同期
+ヘルパーを 1 つ起動し、アクティブなタイルウィンドウ、使用可能領域、
+フォーカス／緊急度を送り、フレーム矩形を受け取ります。`Super+T` の巡回には
+含まれないため、使う場合は明示的にバインドしてください。
+
+```ini
+layout = custom
+layout_helper = python3 ~/.config/tessa/layout.py
+layout_helper_timeout = 100
+bind = SUPER+SHIFT+T set-layout custom
+```
+
+タイムアウト、クラッシュ、不正な応答、矩形不足の場合は、その配置だけ
+マスターへフォールバックします。プロトコルは
+[docs/CUSTOMIZATION.ja.md](/ja/docs/customization/#外部レイアウトヘルパー)
+にあります。
+
+## 仕組み
+
+- [docs/GUIDE.ja.md](/ja/docs/guide/) — 現行ツリーのセットアップと
+  カスタマイズの完全ガイド
+- [docs/CUSTOMIZATION.ja.md](/ja/docs/customization/) — ウィンドウルール、
+  レイアウト調整、外観、カスタマイズモデル
+- [docs/ARCHITECTURE.ja.md](/ja/docs/architecture/) — コンポーネント、
+  シーングラフ、IPC、layer-shell のサイズ計算、パネル描画
+- [docs/EXTENSION-API.ja.md](/ja/docs/extension-api/) — 拡張 API v1 の
+  安定性契約、権限、トークン、ライフサイクル、適合テスト
+- [docs/BENCHMARK.ja.md](/ja/docs/benchmark/) — wayland-compositor-bench の
+  計測結果、方法、生 JSON
+- [docs/ROADMAP.ja.md](/ja/docs/roadmap/) — 未実装の機能と今後の予定
+- [docs/DEVELOPMENT.ja.md](/ja/docs/development/) — SSH / headless 開発
+  ワークフロー
+- [docs/EXTENDING.ja.md](/ja/docs/extending/) — イベント、フック、
+  ステータス、`tessa-ctl` による拡張
+
+概要:
+
+```text
+tessa (wlroots コンポジタ, Zig)
+  ├─ backend: DRM / headless / ネストした Wayland
+  ├─ wlr_scene: 壁紙 < layer background < ウィンドウ < floating < トップバー
+  │              < fullscreen < ランチャーオーバーレイ
+  ├─ マスター/スタック + モザイク + グリッド + カラム、9 ワークスペース、
+  │  フローティング、フルスクリーン
+  └─ IPC: $XDG_RUNTIME_DIR/tessa.sock
+                 ▲
+tessa-panel × 出力数 (Wayland クライアント, Zig + Cairo/Pango)
+  ├─ background layer（墨と太陽の壁紙）
+  ├─ top layer（フローティングタスクバー）
+  └─ overlay layer（ランチャー、排他的キーボード）
+```
+
+パネルはサーフェスごとに 3 枚の `wl_shm` バッファを使い、Cairo で描画し、
+テキストは `panel/text.c` の小さな C シム（Pango）経由でレンダリングします。
+コンポジタとパネルは意図的に単純な行プロトコルで通信します:
+
+```text
+STATE
+ACTIVE 1
+OCC 1 2
+...
+WIN\t1\t1\t1\t0\t0\tkitty\tnotes\teDP-1\t40\t30\t1100\t700
+END
+
+CMD workspace 3 eDP-1
+CMD workspace Code
+CMD move-workspace 3
+CMD toggle-scratchpad
+CMD move-to-scratchpad
+CMD toggle-group
+CMD group-next
+CMD focus 4
+CMD close 4
+CMD spawn kitty
+CMD launcher [query]
+CMD layout [name] [output]
+CMD resize <dx> <dy>
+CMD float <id>
+CMD quit
+```
+
+IPC ソケットは `$XDG_RUNTIME_DIR` 以下にモード `0600` で作成されます。
+
+## 既知の制限
+
+重要な未対応・未検証項目です。
+
+- **DRM/libinput は Arch Linux 実機で確認済みですが、デバイス固有の未検証領域が
+  あります。** ディスプレイマネージャー経由を含む通常セッション、DRM 出力、
+  キーボード、マウス、IME、XWayland クライアントを実際に動作確認しています。
+  タッチパッドのデバイス別チューニング、VRR/Adaptive Sync のコミット、
+  特殊なマルチ GPU／モニター構成は、対応する実機での追加確認が必要です。
+  設定とプロトコルの経路は headless テストで検証しています。
+- **外部シェルは opt-in。** Tessa Panel が既定のままで、Waybar、Quickshell、
+  Wofi の起動時に自動では無効になりません。外部バーを使うときは
+  `panel = false` にしてください。同じ辺に 2 本のバーを置くと領域が二重に
+  予約されます。ext-workspace はワークスペースの activate だけを公開し
+  （Tessa は出力ごと固定 9 ワークスペース）、foreign-toplevel の
+  minimize/maximize 要求は no-op です。Tessa Panel、Waybar、Quickshell の
+  tray は単一の StatusNotifierWatcher を奪い合います。
+- **Kitty は EGL/GL が必要。** GPU アクセラレーションのない VM では、Tessa が
+  動作していても Kitty がウィンドウを作れないことがあります。`foot`、
+  ソフトウェア Mesa、または `terminal = foot` を使ってください。Tessa が
+  foot へ自動フォールバックするのは Kitty が見つからない場合だけです。
+- **フラクショナルスケーリングは部分的。** フラクショナル対応の Wayland
+  クライアントには実行中の変更を含めて正確な出力スケールが通知されます。
+  パネルは Cairo の整数バッファスケールを使うため、フラクショナルでは
+  ダウンサンプルされます。非対応クライアントは切り上げスケールを使います。
+  XWayland のスケーリングは `xwayland-satellite` に依存し、headless
+  テスト環境では未検証です。
+- **出力の無効化は永続化されません。** `wlr-randr --off` は実行中のみ有効で、
+  保存された出力エントリは次回起動時にその出力を有効化します。
+- **パネルは出力ごとに 1 プロセス。** バーが独立し、クラッシュの影響も
+  そのモニタだけに収まりますが、単一のマルチサーフェスパネルよりメモリを
+  使います。
+- **ロック画面の検証は基本的な範囲。** `ext-session-lock-v1` を実装し、
+  最小限のロッククライアントで確認していますが、実際の swaylock/PAM 環境は
+  物理セッションで追加検証が必要です。ロック中にロッククライアントが
+  消えた場合、Tessa は黙ってアンロックせずセッションを終了します。
+- **idle のタイミングは外部ツール任せ。** Tessa は idle 通知、inhibitor、
+  出力電源管理を提供します。自動ブランクやロックには `swayidle` / `wlopm`
+  などを別途起動してください。
+- **クリップボード履歴はテキストのみ・メモリ上のみ。** 最大 8 件、各 16 KiB
+  まで保持し、ディスクには書き込みません。`wlr-data-control-v1` はセッション
+  内のクライアントへ公開されるため、信頼されたアプリはキーボードフォーカス
+  なしでセレクションを読めます。セッション内アプリを信頼できる前提で使って
+  ください。
+- **通知は意図的に最小限。** パネルが `org.freedesktop.Notifications` を所有し、
+  アクション、`default` クリック、静的アイコン（`image-data` /
+  `image-path` / `icon-name`）、Pango マークアップ、置換、閉じる、
+  期限切れに対応します。トーストはフォーカス中の出力へルーティングされます。
+  Pango が扱えない HTML、通知音、通知ごとの出力固定は未対応です。
+- **ウィンドウ効果はまだシンプルです。** 開く/ワークスペース切り替えは
+  設定可能な名前付き cubic-bezier／スプリングカーブ、ウィンドウ別上書き、
+  オフセットでウィンドウフレームを
+  スライドさせます。コンポジタ起点の閉じる操作ではウィンドウのサーフェスを
+  キャプチャし、設定可能なカーブ、スケール、フェードでスナップショットを
+  変化させます。クライアント自身が閉じた場合は unmap 時点でバッファが
+  消えているため即時に消えます。シャドウは固定のレイヤー矩形です。
+  ウィンドウ/レイヤールールでサーフェスごとの不透明度、ボーダー幅、影、
+  および scenefx ビルドでは角丸とブラーも上書きできます。
+  角丸と背景ブラーは `-Dscenefx=true` ビルドが必要です。そのビルドは
+  scenefx の GLES2 レンダラーを使うため、pixman のソフトウェア
+  レンダリングは利用できません。ブラーは半透明のクライアントとシェル
+  レイヤーでのみ見えます。動きを止めるには `animations = false` または
+  `reduce_motion = true` を設定します。`reduce_motion_animations = fade`
+  なら閉じる際のフェードだけを残せます。
+- **システム表示は基本機能のみ。** バッテリーは
+  `/sys/class/power_supply`、ネットワークはデフォルトルートと `operstate` を
+  使います。MPRIS は最初に見つかったプレイヤーを操作し、アルバムアートは
+  表示しません。
+- **トレイにはメニューがありません。** StatusNotifier の登録、pixmap/
+  IconName の描画、アクティベート、ステータス、削除に対応していますが、
+  DBusMenu のコンテキストメニューとセカンダリアクティベートは未対応です。
+- **音量はコマンドブリッジです。** `wpctl`（PipeWire）、`pactl`
+  （PulseAudio）、`amixer`（ALSA）を検出してワーカースレッドで実行します。
+  どれもない環境では音量表示が出ません。パネル設定で独自コマンドも指定
+  できます。
+- **画面共有にはポータルパッケージが必要です。** Tessa はコンポジタ側
+  （`wlr-screencopy`、利用可能なら linux-dmabuf、出力キャプチャソース、
+  image-copy capture、foreign-toplevel リスト）を提供します。
+  `xdg-desktop-portal`、`xdg-desktop-portal-wlr`、PipeWire をインストールし、
+  同梱の `tessa.portal` を配置してください。モニターの ScreenCast は
+  テストで端から端まで確認しています。ウィンドウ単位のキャプチャは
+  ポータルバックエンドのプロトコル対応に依存します。
+- **ガンマ補正と出力設定 UI はありません。**
+- **タッチ/タブレットは実機での追加検証が必要です。** touch capability、
+  シーンのヒットテスト、tablet-v2 のツール/パッド、パネルのタッチ処理は
+  実装済みですが、自動テストはタッチ/タブレットのない headless 出力で
+  動作します。ジェスチャのしきい値はタッチパッドごとに調整が必要な場合が
+  あります。
+- **XIM は登録までを検証しています。** `XMODIFIERS` の継承、X ディスプレイ
+  待機、`xim_start` による Fcitx5 起動、XIM サーバ登録は確認済みです。実際の
+  確定テキストは各 X11 ツールキットの XIM クライアントに依存します。
+- **IME のカバー範囲。** Wayland の text-input-v3 クライアントとパネルは
+  Fcitx5 + Mozc で確認済みです。特殊なレイアウトのデッドキー、
+  スクロール中の入力ポップアップ再配置は未確認です。
+- **XWayland には `xwayland-satellite` が必要。** Tessa には同梱されません。
+  ない場合、X11 アプリは起動しません。Wayland クライアントには影響しません。
+- **拡張は信頼されたローカルプロセス。** セッションユーザーの全権限で動き、
+  サンドボックスはありません。状態/設定スナップショットはバージョン付き
+  JSON で、JSON-RPC の読み取りメソッドと JSON イベント購読も利用できますが、
+  変更操作は引き続き行コマンドを使います。ステータスは短い文字列 8 件までです。
+- **レイアウトヘルパーの応答は完成したスナップショットです。** 出力別の
+  非同期ヘルパー、フォーカス／緊急度メタデータ、バージョンネゴシエーションは
+  実装済みですが、矩形の部分ストリーミング更新は未実装です。
+- **設定編集は端末ベースです。** コンポジタ起動中に
+  `tessa-ctl config-check FILE`、`config-diff FILE`、`config-edit` で検証、
+  実効設定の差分プレビュー、確認付きの適用／リロードができます。
+  `config-edit` は `$VISUAL`／`$EDITOR` を使い、専用 GUI エディタはありません。
+  検証と差分にはコンポジタの起動が必要です。
+- layer-shell とキーボードフォーカスは wlroots 0.20 の unstable API を
+  使っています。パッケージング時は wlroots のバージョンを固定してください。
+- ランチャーは `.desktop` ファイルを走査します。インストールされている
+  アプリが少ないと一覧も短くなります。アイコンテーマはまだ使わず、文字の
+  モノグラムタイルを表示します。
+
+## ライセンス
+
+Tessa は **MIT License** で公開されています。[LICENSE](LICENSE) を参照して
+ください。
+
+## クレジット
+
+wlroots と tinywl の例をイベントループ構造の参考にして、このプロジェクト用に
+ゼロから実装しました。シェルの描画には Cairo/Pango を使っています。Pango を
+C シムに隔離しているのは、GLib の `_Pragma` 非推奨マクロを translate-c が
+処理できないためです。テスト用ターミナルは foot、デフォルトの
+ターミナルは kitty です。

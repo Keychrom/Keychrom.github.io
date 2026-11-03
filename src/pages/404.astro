@@ -1,0 +1,17 @@
+---
+import LandingLayout from '../layouts/LandingLayout.astro';
+---
+
+<LandingLayout locale="en" title="Page not found — Tessa" description="The page you requested does not exist.">
+  <section class="site-container flex min-h-[65vh] flex-col items-center justify-center py-24 text-center">
+    <p class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-[var(--tessa-accent-2)]">404 · lost in the scene graph</p>
+    <h1 class="display mt-5 text-[clamp(3rem,8vw,6rem)]">Nothing tiled here.</h1>
+    <p class="mt-4 max-w-md text-sm leading-6 text-[var(--tessa-muted)]">
+      The page may have moved, or the layout is hiding it. Try the docs or head back to the desktop.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="/docs/" class="rounded-full bg-[var(--tessa-accent)] px-5 py-3 text-sm font-semibold text-[#fff8f4]">Read the docs</a>
+      <a href="/" class="rounded-full border border-[var(--tessa-border-soft)] px-5 py-3 text-sm font-semibold text-[var(--tessa-text)]">Back home</a>
+    </div>
+  </section>
+</LandingLayout>

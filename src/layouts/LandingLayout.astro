@@ -1,0 +1,78 @@
+---
+import '../styles/landing.css';
+import Header from '../components/landing/Header.astro';
+import Footer from '../components/landing/Footer.astro';
+import { landing, type LandingLocale } from '../i18n/landing';
+
+interface Props {
+  locale: LandingLocale;
+  title?: string;
+  description?: string;
+}
+
+const { locale, title, description } = Astro.props;
+const copy = landing[locale];
+const site = Astro.site ?? new URL('https://keychrom.github.io');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL('/og.png', site).href;
+const pageTitle = title ?? (locale === 'ja' ? 'Tessa — 静かなタイル型 Wayland デスクトップ' : 'Tessa — a quiet tiled Wayland desktop');
+const pageDescription = description ?? copy.hero.body;
+const alternateEn = new URL('/', site).href;
+const alternateJa = new URL('/ja/', site).href;
+---
+
+<!doctype html>
+<html lang={copy.lang} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={alternateEn} />
+    <link rel="alternate" hreflang="ja" href={alternateJa} />
+    <link rel="alternate" hreflang="x-default" href={alternateEn} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tessa" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#070a12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#faf7f2" media="(prefers-color-scheme: light)" />
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('starlight-theme');
+          const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.dataset.theme =
+            stored === 'light' || (stored !== 'dark' && prefersLight) ? 'light' : 'dark';
+        } catch {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+  </head>
+  <body class="site-shell grain">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[var(--tessa-accent)] focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+    >
+      Skip to content
+    </a>
+    <Header copy={copy} />
+    <main id="main" class="relative z-10">
+      <slot />
+    </main>
+    <Footer copy={copy} />
+  </body>
+</html>

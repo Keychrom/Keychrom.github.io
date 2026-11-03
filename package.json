@@ -1,0 +1,35 @@
+{
+  "name": "tessa-webdocs",
+  "version": "1.0.0",
+  "description": "Tessa website and documentation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check && svelte-check --tsconfig ./tsconfig.json",
+    "sync:docs": "node scripts/sync-docs.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "assets": "node scripts/make-assets.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/starlight": "^0.42.8",
+    "@astrojs/svelte": "^9.1.2",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.4",
+    "astro": "^7.4.5",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
+    "tailwindcss": "^4.3.4",
+    "typescript": "^6.0.3"
+  }
+}

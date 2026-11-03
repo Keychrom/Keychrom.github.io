@@ -1,0 +1,170 @@
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+:root {
+  --tessa-accent: #e2684f;
+  --tessa-accent-2: #f08a72;
+  --tessa-accent-3: #f6b39f;
+  --tessa-border: rgba(226, 104, 79, 0.2);
+  --tessa-border-soft: rgba(148, 163, 184, 0.13);
+  --tessa-bg: #070a12;
+  --tessa-surface: #101827;
+  --tessa-text: #eef2f8;
+  --tessa-muted: #9aa7ba;
+
+  --sl-color-accent-low: #351814;
+  --sl-color-accent: #e2684f;
+  --sl-color-accent-high: #f6b39f;
+  --sl-color-white: #f8fafc;
+  --sl-color-gray-1: #eef2f8;
+  --sl-color-gray-2: #c8d2e1;
+  --sl-color-gray-3: #9aa7ba;
+  --sl-color-gray-4: #64748b;
+  --sl-color-gray-5: #263247;
+  --sl-color-gray-6: #141d2c;
+  --sl-color-black: #070a12;
+
+  --sl-color-text: #c8d2e1;
+  --sl-color-text-accent: #f08a72;
+  --sl-color-text-invert: #2a100c;
+  --sl-color-bg: #070a12;
+  --sl-color-bg-nav: rgba(10, 15, 26, 0.82);
+  --sl-color-bg-sidebar: #0a0f1a;
+  --sl-color-bg-inline-code: #1a2435;
+  --sl-color-bg-accent: #e2684f;
+  --sl-color-hairline-light: #263247;
+  --sl-color-hairline: #182234;
+  --sl-color-hairline-shade: #070a12;
+  --sl-color-backdrop-overlay: rgba(7, 10, 18, 0.72);
+
+  --sl-font: "Inter Variable", ui-sans-serif, system-ui, "Hiragino Sans", "Yu Gothic",
+    "Noto Sans JP", sans-serif;
+  --sl-font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --sl-content-width: 48rem;
+  --sl-sidebar-width: 18rem;
+  --sl-nav-height: 4rem;
+  --sl-line-height: 1.78;
+}
+
+:root[data-theme="light"] {
+  --tessa-border: rgba(201, 80, 58, 0.22);
+  --tessa-border-soft: rgba(26, 28, 34, 0.1);
+  --tessa-bg: #faf7f2;
+  --tessa-surface: #ffffff;
+  --tessa-text: #1a1c22;
+  --tessa-muted: #5f6470;
+
+  --sl-color-accent-low: #f4d9d1;
+  --sl-color-accent: #c9503a;
+  --sl-color-accent-high: #7f291c;
+  --sl-color-white: #17181d;
+  --sl-color-gray-1: #1a1c22;
+  --sl-color-gray-2: #333742;
+  --sl-color-gray-3: #5f6470;
+  --sl-color-gray-4: #8a8f9a;
+  --sl-color-gray-5: #d9d2c7;
+  --sl-color-gray-6: #eee7dc;
+  --sl-color-black: #faf7f2;
+
+  --sl-color-text: #333742;
+  --sl-color-text-accent: #a83c2a;
+  --sl-color-text-invert: #fff8f4;
+  --sl-color-bg: #faf7f2;
+  --sl-color-bg-nav: rgba(250, 247, 242, 0.86);
+  --sl-color-bg-sidebar: #f3ede4;
+  --sl-color-bg-inline-code: #f1e9de;
+  --sl-color-bg-accent: #c9503a;
+  --sl-color-hairline-light: #e0d7ca;
+  --sl-color-hairline: #e8e0d4;
+  --sl-color-hairline-shade: #faf7f2;
+  --sl-color-backdrop-overlay: rgba(250, 247, 242, 0.78);
+}
+
+html {
+  background:
+    radial-gradient(900px 520px at 85% -10%, rgba(226, 104, 79, 0.12), transparent 60%),
+    var(--sl-color-bg);
+}
+
+body {
+  background: transparent;
+}
+
+site-search button,
+.header,
+.sidebar-pane {
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.header {
+  border-bottom-color: var(--tessa-border-soft);
+}
+
+.sidebar-pane {
+  border-inline-end-color: var(--tessa-border-soft);
+}
+
+.content-panel h1,
+.content-panel h2,
+.content-panel h3,
+.hero h1 {
+  font-family: "Bricolage Grotesque Variable", var(--sl-font);
+  letter-spacing: -0.035em;
+}
+
+.content-panel h1 {
+  font-weight: 600;
+}
+
+.sl-markdown-content {
+  font-size: 0.9875rem;
+}
+
+.sl-markdown-content a {
+  text-underline-offset: 0.18em;
+}
+
+.sl-markdown-content :not(pre) > code {
+  border: 1px solid var(--tessa-border-soft);
+  border-radius: 0.35rem;
+  padding: 0.08em 0.35em;
+}
+
+.sl-markdown-content table {
+  font-size: 0.92em;
+}
+
+.sl-markdown-content blockquote {
+  border-inline-start-color: var(--tessa-accent);
+  background: color-mix(in srgb, var(--tessa-accent) 6%, transparent);
+  border-radius: 0 0.6rem 0.6rem 0;
+}
+
+.sl-markdown-content img {
+  border: 1px solid var(--tessa-border-soft);
+  border-radius: 0.8rem;
+}
+
+.sidebar-content a[aria-current="page"] {
+  background: color-mix(in srgb, var(--tessa-accent) 12%, transparent);
+  color: var(--sl-color-text-accent);
+}
+
+.social-icons a:hover,
+.right-sidebar a:hover {
+  color: var(--tessa-accent-2);
+}
+
+/* The theme picker is a native select in Starlight; keep it compact. */
+starlight-theme-select select {
+  border-radius: 999px;
+}
+
+@media (min-width: 72rem) {
+  .right-sidebar {
+    border-inline-start-color: var(--tessa-border-soft);
+  }
+}
