@@ -11,6 +11,8 @@ interface Props {
 const { locale } = Astro.props;
 const copy = landing[locale];
 const docsHref = copy.nav.docsHref;
+const installHref =
+  locale === 'ja' ? '/ja/docs/guide/#2-インストールまたはビルド' : '/docs/guide/#2-install-or-build';
 const repo = 'https://github.com/Keychrom/Tessa';
 const features = copy.features.items;
 const spans = ['md:col-span-4', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-6'];
@@ -202,8 +204,8 @@ const spans = ['md:col-span-4', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2
       <p class="font-mono text-[0.66rem] uppercase tracking-[0.18em] text-[var(--tessa-accent-2)]">{copy.install.eyebrow}</p>
       <h2 class="display mt-4 text-[clamp(2.2rem,5vw,4rem)]">{copy.install.title}</h2>
       <p class="mt-5 max-w-lg text-[0.98rem] leading-7 text-[var(--tessa-muted)]">{copy.install.body}</p>
-      <a href={`${repo}#install-on-arch-linux`} class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[var(--tessa-accent-2)] hover:text-[var(--tessa-accent-3)]">
-        {locale === 'ja' ? '詳しい手順を見る' : 'Read the full install guide'} <span aria-hidden="true">↗</span>
+      <a href={installHref} class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[var(--tessa-accent-2)] hover:text-[var(--tessa-accent-3)]">
+        {locale === 'ja' ? '詳しい手順を見る' : 'Read the full install guide'} <span aria-hidden="true">→</span>
       </a>
     </div>
     <div class="card min-w-0 p-5 sm:p-6">
