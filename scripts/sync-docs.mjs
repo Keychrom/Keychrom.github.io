@@ -21,6 +21,12 @@ const publicRoot = path.join(root, 'public');
 
 const pages = [
   {
+    file: 'QUICKSTART',
+    slug: 'quickstart',
+    title: 'Quickstart',
+    jaTitle: 'クイックスタート',
+  },
+  {
     file: 'GUIDE',
     slug: 'guide',
     title: 'Setup & Customization Guide',
@@ -43,6 +49,7 @@ const pages = [
 
 const docPaths = new Map([
   ['README.md', '/docs/'],
+  ['QUICKSTART.md', '/docs/quickstart/'],
   ['GUIDE.md', '/docs/guide/'],
   ['CUSTOMIZATION.md', '/docs/customization/'],
   ['RENDERING.md', '/docs/rendering/'],
@@ -106,7 +113,14 @@ function extractPage(text, fallbackTitle) {
     body
       .split(/\n\s*\n/)
       .map((p) => p.trim())
-      .find((p) => p && !p.startsWith('#') && !p.startsWith('```') && !p.startsWith('|')) ?? '';
+      .find(
+        (p) =>
+          p &&
+          !p.startsWith('#') &&
+          !p.startsWith('```') &&
+          !p.startsWith('|') &&
+          !p.startsWith('>'),
+      ) ?? '';
   const description = paragraph
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')

@@ -17,6 +17,7 @@ export const landing = {
       language: '日本語',
       languageHref: '/ja/',
       docsHref: '/docs/',
+      quickstartHref: '/docs/quickstart/',
       benchmarkHref: '/docs/benchmark/',
     },
     hero: {
@@ -129,6 +130,7 @@ export const landing = {
       title: 'Read the whole story.',
       body: 'A complete guide, configuration reference, architecture notes, extension contract, benchmark, and roadmap — in English and Japanese.',
       cards: [
+        { title: 'Start here', body: 'Install Tessa, start your first session, and learn the essential keys.', href: '/docs/quickstart/' },
         { title: 'Set up and customize', body: 'Install, key bindings, rules, layouts, effects, and the panel.', href: '/docs/guide/' },
         { title: 'Build an extension', body: 'The stable v1 contract: handshake, scopes, tokens, and lifecycle.', href: '/docs/extension-api/' },
         { title: 'Understand the compositor', body: 'Scene graph, rendering, IPC, layout helpers, and the panel.', href: '/docs/architecture/' },
@@ -165,6 +167,7 @@ export const landing = {
       language: 'English',
       languageHref: '/',
       docsHref: '/ja/docs/',
+      quickstartHref: '/ja/docs/quickstart/',
       benchmarkHref: '/ja/docs/benchmark/',
     },
     hero: {
@@ -277,6 +280,7 @@ export const landing = {
       title: '全体像を読む。',
       body: 'セットアップ、設定リファレンス、アーキテクチャ、拡張契約、ベンチマーク、ロードマップを英語と日本語で。',
       cards: [
+        { title: 'はじめる', body: 'インストール、最初のセッション起動、基本のキー操作。', href: '/ja/docs/quickstart/' },
         { title: 'セットアップとカスタマイズ', body: 'インストール、キーバインド、ルール、レイアウト、エフェクト、パネル。', href: '/ja/docs/guide/' },
         { title: '拡張を作る', body: '安定版 v1 の契約: ハンドシェイク、スコープ、トークン、ライフサイクル。', href: '/ja/docs/extension-api/' },
         { title: 'コンポジタを理解する', body: 'シーングラフ、描画、IPC、レイアウトヘルパー、パネル。', href: '/ja/docs/architecture/' },

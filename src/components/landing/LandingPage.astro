@@ -11,6 +11,7 @@ interface Props {
 const { locale } = Astro.props;
 const copy = landing[locale];
 const docsHref = copy.nav.docsHref;
+const quickstartHref = copy.nav.quickstartHref;
 const installHref =
   locale === 'ja' ? '/ja/docs/guide/#2-インストールまたはビルド' : '/docs/guide/#2-install-or-build';
 const repo = 'https://github.com/Keychrom/Tessa';
@@ -35,7 +36,7 @@ const spans = ['md:col-span-4', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2
       </p>
       <div class="mt-8 flex flex-wrap items-center gap-3">
         <a
-          href={docsHref}
+          href={quickstartHref}
           class="inline-flex items-center gap-2 rounded-full bg-[var(--tessa-accent)] px-5 py-3 text-sm font-semibold text-[#fff8f4] shadow-[0_10px_36px_var(--tessa-glow)] transition hover:-translate-y-0.5 hover:bg-[var(--tessa-accent-2)]"
         >
           {copy.hero.primary}

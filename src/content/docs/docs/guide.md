@@ -3,6 +3,9 @@ title: "Tessa Setup & Customization Guide"
 description: "This guide collects the setup and customization surface of the current Tessa tree. It covers the implementation through the 0.7 roadmap, including special workspaces, shell v2, the"
 ---
 
+> **New to Tessa?** Start with the [Quickstart](/docs/quickstart/) for installation,
+> first launch, and the essential keys.
+
 This guide collects the setup and customization surface of the current Tessa
 tree. It covers the implementation through the 0.7 roadmap, including special
 workspaces, shell v2, the effect helper, performance instrumentation, and the
@@ -283,6 +286,13 @@ Use this only for a source build:
 
 # System-wide install
 sudo PREFIX=/usr/local ./scripts/install-session.sh
+```
+
+Add `-Dscenefx=false` to either command for a plain build without scenefx,
+for example on Ubuntu 26.04:
+
+```sh
+./scripts/install-session.sh -Dscenefx=false
 ```
 
 The installer places:

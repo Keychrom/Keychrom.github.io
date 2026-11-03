@@ -48,6 +48,11 @@ export default defineConfig({
           label: 'Start here',
           translations: { ja: 'はじめに' },
           items: [
+            {
+              slug: 'docs/quickstart',
+              label: 'Quickstart',
+              translations: { ja: 'クイックスタート' },
+            },
             { slug: 'docs', label: 'Overview', translations: { ja: '概要' } },
             { slug: 'docs/guide', label: 'Guide', translations: { ja: 'ガイド' } },
           ],
