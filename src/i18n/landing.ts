@@ -27,7 +27,7 @@ export const landing = {
       body: 'Tessa is a tiling Wayland compositor and shell written in Zig. Layouts that flow, a panel that belongs, and a stable extension surface for the rest.',
       primary: 'Get started',
       secondary: 'View on GitHub',
-      note: 'wlroots 0.20 · Zig 0.17 · 77 headless tests',
+      note: 'wlroots 0.20 · Zig 0.17 · 78 headless tests',
     },
     layout: {
       eyebrow: 'One compositor, many shapes',
@@ -48,7 +48,7 @@ export const landing = {
       { value: '59.7', unit: 'fps', label: 'single animated surface' },
       { value: '2.4', unit: 'ms', label: 'compositor per frame' },
       { value: '120', unit: 'MiB', label: 'idle session RAM' },
-      { value: '77', unit: 'tests', label: 'headless scripts' },
+      { value: '78', unit: 'tests', label: 'headless scripts' },
     ],
     features: {
       eyebrow: 'What is inside',
@@ -177,7 +177,7 @@ export const landing = {
       body: 'Tessa は Zig で書かれたタイル型 Wayland コンポジタ兼シェルです。流れるようなレイアウト、馴染むパネル、そして拡張のための安定した API を備えています。',
       primary: 'はじめる',
       secondary: 'GitHub を見る',
-      note: 'wlroots 0.20 · Zig 0.17 · headless テスト 77 本',
+      note: 'wlroots 0.20 · Zig 0.17 · headless テスト 78 本',
     },
     layout: {
       eyebrow: 'ひとつのコンポジタ、複数の形',
@@ -198,7 +198,7 @@ export const landing = {
       { value: '59.7', unit: 'fps', label: 'アニメーション 1 面' },
       { value: '2.4', unit: 'ms', label: '1 フレームあたりのコンポジタ' },
       { value: '120', unit: 'MiB', label: 'アイドル時 RAM' },
-      { value: '77', unit: 'tests', label: 'headless テスト' },
+      { value: '78', unit: 'tests', label: 'headless テスト' },
     ],
     features: {
       eyebrow: '中身',
