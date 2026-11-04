@@ -111,15 +111,15 @@ export const landing = {
     install: {
       eyebrow: 'Get Tessa',
       title: 'Start in a few minutes.',
-      body: 'Packages track the 0.2.4 release; the current 0.2.5 tree builds from source with Zig 0.17, wlroots 0.20, and scenefx 0.5.',
+      body: 'Use the Ubuntu/Debian installer, the Arch package, or build from source. The current 0.2.5 tree targets Zig 0.17, wlroots 0.20, and scenefx 0.5.',
       tabs: {
         arch: 'Arch Linux',
-        ubuntu: 'Ubuntu',
+        ubuntu: 'Ubuntu / Debian',
         source: 'From source',
       },
       notes: {
         arch: 'Official zig, wlroots0.20, and scenefx packages. Rounded corners and blur are enabled by default.',
-        ubuntu: 'The 0.2.4 .deb is the final planned Debian package and uses the plain wlroots scene. Build from source for 0.2.5.',
+        ubuntu: 'Ubuntu 24.04+ and Debian 13+. Builds missing Wayland and wlroots pieces under /opt/tessa without replacing system libraries.',
         source: 'Requires Zig 0.17, wlroots 0.20, scenefx 0.5, Wayland, Cairo, Pango, and fonts.',
       },
       copy: 'Copy',
@@ -261,15 +261,15 @@ export const landing = {
     install: {
       eyebrow: 'Tessa を入手',
       title: '数分ではじめられます。',
-      body: 'パッケージは 0.2.4 リリース時点です。現在の 0.2.5 ツリーは Zig 0.17、wlroots 0.20、scenefx 0.5 でソースからビルドします。',
+      body: 'Ubuntu / Debian は専用インストーラー、Arch Linux はパッケージ、開発時はソースビルドを使います。現在の 0.2.5 は Zig 0.17、wlroots 0.20、scenefx 0.5 が対象です。',
       tabs: {
         arch: 'Arch Linux',
-        ubuntu: 'Ubuntu',
+        ubuntu: 'Ubuntu / Debian',
         source: 'ソースから',
       },
       notes: {
         arch: '公式の zig、wlroots0.20、scenefx を使用します。角丸とブラーは既定で有効です。',
-        ubuntu: '0.2.4 の .deb が最後の予定 Debian パッケージで、plain wlroots シーンを使用します。0.2.5 はソースからビルドしてください。',
+        ubuntu: 'Ubuntu 24.04 以降 / Debian 13 以降。不足する Wayland / wlroots を /opt/tessa にビルドし、システムライブラリは置き換えません。',
         source: 'Zig 0.17、wlroots 0.20、scenefx 0.5、Wayland、Cairo、Pango、フォントが必要です。',
       },
       copy: 'コピー',

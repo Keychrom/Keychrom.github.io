@@ -11,9 +11,10 @@
     arch: `git clone https://github.com/Keychrom/Tessa.git
 cd Tessa/packaging/arch
 makepkg -si`,
-    ubuntu: `# 0.2.4 is the final planned .deb release
-sudo apt install ./tessa_0.2.4_amd64.deb
-tessa-ctl config-check`,
+    ubuntu: `git clone https://github.com/Keychrom/Tessa.git
+cd Tessa
+./install.sh --check
+./install.sh`,
     source: `git clone https://github.com/Keychrom/Tessa.git
 cd Tessa
 ./scripts/build.sh -Doptimize=ReleaseSafe

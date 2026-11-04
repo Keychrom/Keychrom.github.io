@@ -53,6 +53,11 @@ export default defineConfig({
               label: 'Quickstart',
               translations: { ja: 'クイックスタート' },
             },
+            {
+              slug: 'docs/install-script',
+              label: 'Ubuntu / Debian installer',
+              translations: { ja: 'Ubuntu / Debian インストーラー' },
+            },
             { slug: 'docs', label: 'Overview', translations: { ja: '概要' } },
             { slug: 'docs/guide', label: 'Guide', translations: { ja: 'ガイド' } },
           ],

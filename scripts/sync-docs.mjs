@@ -19,6 +19,10 @@ const enDocs = path.join(contentRoot, 'docs');
 const jaDocs = path.join(contentRoot, 'ja/docs');
 const publicRoot = path.join(root, 'public');
 
+// Pages that exist only on the website and are not generated from Tessa's
+// Markdown. Preserve them when the generated docs directories are replaced.
+const siteOnlyPages = ['install-script'];
+
 const pages = [
   {
     file: 'QUICKSTART',
@@ -214,10 +218,23 @@ function main() {
     throw new Error(`Tessa source not found at ${source}; set TESSA_REPO.`);
   }
 
+  const preservedSitePages = new Map();
+  for (const dir of [enDocs, jaDocs]) {
+    for (const slug of siteOnlyPages) {
+      const file = path.join(dir, `${slug}.md`);
+      if (fs.existsSync(file)) preservedSitePages.set(file, fs.readFileSync(file));
+    }
+  }
+
   fs.rmSync(enDocs, { recursive: true, force: true });
   fs.rmSync(jaDocs, { recursive: true, force: true });
   ensureDir(enDocs);
   ensureDir(jaDocs);
+
+  for (const [file, data] of preservedSitePages) {
+    ensureDir(path.dirname(file));
+    fs.writeFileSync(file, data);
+  }
 
   const overviewEn = extractPage(readSource('README.md'), 'Overview');
   writeDoc(enDocs, 'index', { ...overviewEn, title: 'Overview', lang: 'en' });
