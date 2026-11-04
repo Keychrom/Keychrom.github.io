@@ -7,6 +7,8 @@ description: "install.sh で Ubuntu / Debian に現在の Tessa をインスト�
 
 ディストリビューションが Zig 0.17、wlroots 0.20、scenefx 0.5、十分新しい libinput を提供していない場合に使います。Arch Linux では代わりに [PKGBUILD](/ja/docs/packaging/#arch-linux) を使ってください。
 
+> **テスト状況:** `install.sh` は追加されたばかりで、まだ十分な検証ができていません。Ubuntu 24.04 x86_64 ではビルド、インストール、動的ライブラリの解決まで確認していますが、Debian 13/sid、aarch64、実機 GPU でのセッション起動は未確認です。試験的なものとして扱い、実行前にスクリプトを確認し、既存のセッションへ戻れる状態を残してください。
+
 ## 必要なもの
 
 - Ubuntu 24.04 以降、または Debian 13 以降
