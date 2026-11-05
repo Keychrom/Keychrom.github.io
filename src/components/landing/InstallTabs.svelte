@@ -4,8 +4,8 @@
 
   let { copy }: { copy: LandingCopy } = $props();
 
-  type Tab = 'arch' | 'ubuntu' | 'source';
-  const tabs: Tab[] = ['arch', 'ubuntu', 'source'];
+  type Tab = 'arch' | 'ubuntu' | 'nixos' | 'source';
+  const tabs: Tab[] = ['arch', 'ubuntu', 'nixos', 'source'];
 
   const commands: Record<Tab, string> = {
     arch: `git clone https://github.com/Keychrom/Tessa.git
@@ -15,6 +15,14 @@ makepkg -si`,
 cd Tessa
 ./install.sh --check
 ./install.sh`,
+    nixos: `# flake.nix
+inputs.tessa.url = "github:Keychrom/Tessa";
+
+# configuration.nix
+programs.tessa.enable = true;
+services.displayManager.sddm.enable = true;
+
+sudo nixos-rebuild switch --flake .#host`,
     source: `git clone https://github.com/Keychrom/Tessa.git
 cd Tessa
 ./scripts/build.sh -Doptimize=ReleaseSafe
@@ -52,4 +60,12 @@ cd Tessa
   </div>
 
   <p class="text-xs leading-5 text-[var(--tessa-faint)]">{copy.install.notes[tab]}</p>
+  {#if tab === 'nixos'}
+    <a
+      class="text-xs font-medium text-[var(--tessa-accent-2)] hover:underline"
+      href={copy.install.nixosHref}
+    >
+      {copy.install.nixosLink} →
+    </a>
+  {/if}
 </div>

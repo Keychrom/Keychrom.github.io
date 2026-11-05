@@ -58,6 +58,11 @@ export default defineConfig({
               label: 'Ubuntu / Debian installer',
               translations: { ja: 'Ubuntu / Debian インストーラー' },
             },
+            {
+              slug: 'docs/install-nixos',
+              label: 'NixOS',
+              translations: { ja: 'NixOS' },
+            },
             { slug: 'docs', label: 'Overview', translations: { ja: '概要' } },
             { slug: 'docs/guide', label: 'Guide', translations: { ja: 'ガイド' } },
           ],

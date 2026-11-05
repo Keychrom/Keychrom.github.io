@@ -9,7 +9,8 @@ under `/opt/tessa`.
 
 Use it when the distribution does not provide Zig 0.17, wlroots 0.20, scenefx
 0.5, or a new enough libinput. Arch Linux users should use the
-[PKGBUILD](/docs/packaging/#arch-linux) instead.
+[PKGBUILD](/docs/packaging/#arch-linux) instead. NixOS users should use the
+[NixOS flake guide](/docs/install-nixos/) instead.
 
 > **Testing status:** `install.sh` is new and has not been tested widely yet.
 > It was verified on Ubuntu 24.04 x86_64 through building, installation, and
