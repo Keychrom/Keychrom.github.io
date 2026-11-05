@@ -98,8 +98,15 @@ config, man pages, and documentation.
 | `programs.tessa.xwayland` | `true` | Add `xwayland-satellite` for X11 applications |
 | `programs.tessa.portals` | `true` | Enable the wlr screenshot/screencast portal |
 | `programs.tessa.defaultSession` | `true` | Set the display manager's default session |
+| `programs.tessa.networkmanager` | `false` | Enable NetworkManager for control-center Wi-Fi |
+| `programs.tessa.bluetooth` | `false` | Enable BlueZ for control-center Bluetooth |
+| `programs.tessa.powerProfiles` | `false` | Enable power-profiles-daemon for power profiles |
 
-The module also enables polkit, D-Bus, and `hardware.graphics`.
+The module also enables polkit, D-Bus, and `hardware.graphics`. The
+NetworkManager, Bluetooth, and power-profile options are opt-in because not
+every Tessa machine uses them; each one turns on the corresponding NixOS
+service. The control center shows an unavailable section when a service is
+absent, so they can be enabled later without rebuilding Tessa.
 
 ## Configuration
 

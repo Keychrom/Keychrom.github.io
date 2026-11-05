@@ -579,6 +579,9 @@ Use `xim = false` when another input method stack manages `XMODIFIERS`.
 | `font` | panel/launcher family |
 | `bar_height` | bar thickness/height in logical pixels (32–96) |
 | `bar_position` | bar edge: `top` (default), `bottom`, `left`, or `right` |
+| `panel_style` | `classic` | `classic` keeps separate popovers; `unified` adds the control center |
+| `control_features` | `all` | Control-center features (CSV, `all`, `none`) |
+| `control_action` | - | Custom quick action `Label \| command` (repeatable) |
 | `bar_top_margin` | distance from the chosen edge (0–64) |
 | `bar_side_margin` | inset along the bar; left/right for top/bottom, top/bottom for left/right (0–128) |
 | `panel_bg` | bar background color |
@@ -816,8 +819,9 @@ Tessa watches MPRIS on the session bus. The first player discovered contributes
 a bar chip with the current title and play/pause state. Click the chip, press
 `Super+M`, or run `tessa-ctl panel media` to open the controls: previous,
 play/pause, and next. In the popover, `Space` toggles playback and `Left`/`Right`
-skip. The MPRIS client is read-only for metadata; album art is not displayed.
-Use `media` as a key-binding action, for example:
+skip. The unified control center also shows progress, local `file://` album
+artwork, and click-to-seek; remote artwork URLs are not fetched. Use `media` as
+a key-binding action, for example:
 
 ```ini
 bind = SUPER+M media
@@ -907,10 +911,12 @@ protocols; Tessa currently advertises output capture sources.
 
 The panel implements the `org.freedesktop.Notifications` D-Bus service on the
 session bus, so applications can use it without a separate daemon. Up to four
-toasts stack below the bar. They support replacement by notification id, timeout
-(`0` keeps a notification until dismissed), `CloseNotification`, and
-click-to-dismiss. Notifications marked with an expiry time remove themselves and
-emit the corresponding signal.
+toasts stack below the bar, and up to 50 notifications are retained in memory
+for the unified control center. They support replacement by notification id,
+timeout (`0` keeps a notification until dismissed), `CloseNotification`, and
+click-to-dismiss. An expiry hides the toast but keeps the history entry and
+emits the corresponding signal. Focus/DND in the control center suppresses new
+toasts while still recording history.
 
 Advertised capabilities are `actions`, `body`, `body-markup`, `icon-static`, and
 `persistence`:

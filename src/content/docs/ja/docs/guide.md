@@ -37,7 +37,7 @@ Arch Linux では 2.2 節の PKGBUILD を使います。実行時
 - wlroots **0.20** 開発ファイル
 - Wayland、wayland-protocols 1.47 以降、xkbcommon、pixman、libdrm、libinput、
   seat/udev、EGL/GLES
-- Cairo、Pango、GLib/GIO（パネルと通知用）
+- Cairo、Pango、GLib/GIO、gdk-pixbuf（パネル、通知、MPRIS アートワーク用）
 - フォント: Inter、JetBrains Mono、Noto Sans CJK JP など
 - ターミナル: 既定は `kitty`。`terminal = foot` などで変更可能
 
@@ -611,6 +611,9 @@ Tessa は設定ディレクトリも監視します。メイン設定と同デ�
 | `panel` / `autostart_panel` | `true` | `tessa-panel` を出力ごとに自動起動 |
 | `bar_height` | `44` | バーの太さ／高さ（32〜96） |
 | `bar_position` | `top` | バーの位置: `top`、`bottom`、`left`、`right` |
+| `panel_style` | `classic` | `classic` は個別ポップオーバー、`unified` は統合コントロールパネル |
+| `control_features` | `all` | コントロールパネルの機能（CSV、`all`、`none`） |
+| `control_action` | - | カスタムクイックアクション `ラベル \| コマンド`（複数可） |
 | `bar_top_margin` | `12` | 選んだ端からの距離（0〜64） |
 | `bar_side_margin` | `16` | バーに沿った余白。上下バーでは左右、左右バーでは上下（0〜128） |
 | `panel_bg` | `#0e131d` | `panel.background` と各サーフェス既定値の基底背景色 |
@@ -637,6 +640,11 @@ Tessa は設定ディレクトリも監視します。メイン設定と同デ�
 | `volume_up` | 空 | 音量上げコマンド |
 | `volume_down` | 空 | 音量下げコマンド |
 | `volume_mute` | 空 | ミュート切り替えコマンド |
+
+`control_features` には `wifi`、`bluetooth`、`focus`、`notifications`、
+`media`、`volume`、`brightness`、`power_profile`、`battery`、`quick_actions`、
+`tray`、`calendar`、`power` をカンマ、空白、または `|` 区切りで指定します。
+`control_action` は最大 4 件まで繰り返せます。
 
 `bar_height` や `bar_position` を変更すると、設定リロード時にバーの layer
 surface が作り直され、予約領域も更新されます。`left`/`right` では縦長の
@@ -1779,6 +1787,48 @@ Fcitx5 は実行中キーボードグラブを保持します。Tessa は入力�
 - `TESSA` マーク右クリックで電源メニュー
 - `Up`/`Down`、`Enter`、`Esc`、クリック
 - Lock/Suspend/Reboot/Power Off のコマンドを設定可能
+
+### コントロールパネル
+
+`panel_style = classic`（既定）は、時計・音量・メディア・トレイ・Wi-Fi・
+Bluetooth の個別ポップオーバーを維持します。`panel_style = unified` ではバーに
+Controls ボタンが追加され、バーの各ポップオーバー入口が1つのコントロールパネルに
+まとまります。
+
+- Wi-Fi: NetworkManager のスキャン、電波強度、WPA2/WPA3-PSK・オープン、
+  隠しSSID、保存済み接続、接続/切断/忘れる、ラジオON/OFF
+- Bluetooth: BlueZ のアダプタ電源、探索、デバイス一覧、ペアリング/接続/
+  切断/忘れる、バッテリー残量、確認・パスキー入力
+- Focus（通知の一時停止）、通知履歴（50件）、クリア、アクション
+- 音量・輝度スライダー、電源プロファイル（power-profiles-daemon）
+- メディアカード（ローカルの `file://` ジャケット、進行バー、クリックシーク）
+- バッテリー、ロック/サスペンド/再起動/電源OFF、スクリーンショット、
+  クリップボード、設定、最大4件の `control_action`
+
+`control_features` で機能単位に表示を切り替えられます（例:
+`control_features = wifi, bluetooth, volume, notifications`）。classic では
+同じキーが Wi-Fi/Bluetooth ポップオーバーと Bluetooth インジケータを制御します。
+unified では時計がカレンダー、トレイがトレイビュー、電源メニューが電源ビューを
+開きます。IPC からは次のように開けます:
+
+```sh
+tessa-ctl panel control
+tessa-ctl panel wifi
+tessa-ctl panel bluetooth
+tessa-ctl panel notifications
+```
+
+Wi-Fi はシステムの NetworkManager D-Bus API を使います。WPA2/WPA3-PSK、
+オープン、隠しSSID に対応し、802.1X/EAP・VPN・キャプティブポータルは対象外です。
+Bluetooth は BlueZ を直接使い、ペアリングエージェントはプライマリパネルだけが
+登録します（セカンダリ出力ではペアリング不可）。通知履歴はメモリ内で、
+通知オーナーのパネルだけに表示されます。
+
+輝度は `/sys/class/backlight` と logind の `SetBrightness` を使い、バックライトが
+ない環境ではスライダーを隠します。電源プロファイルには
+power-profiles-daemon が必要です。NetworkManager、BlueZ、
+power-profiles-daemon、logind は任意の実行時サービスで、ない場合は
+「利用不可」表示になりパネル自体は継続します。
 
 ### 12.5 通知
 
