@@ -63,6 +63,10 @@ Tessa は意図的に小さく保っています。ロードマップは「日�
 - [x] オプトインの EGL/GLES2 パネル背景レンダラー: Cairo で描いた壁紙
       テクスチャ、水面／インクのシェーダーアニメーション、
       `panel_renderer`、`wallpaper_animation`、Cairo への自動フォールバック。
+- [x] 手続き生成 GPU 壁紙エンジン（`wallpaper_engine = procedural`）。
+      パレットのクロスフェードと Cairo 描画のコーナーマーク付き。
+- [x] オプトインの GPU オーバーレイ表示（`overlay_renderer = gpu`）:
+      Cairo 内容のキャッシュと GPU による開閉の拡大・フェード・ドロップ。
 - [x] HDR/color management の調査: wlroots 0.20 は color-management v1 と
       出力色変換を提供するが、Tessa の GLES2/scenefx 経路と tone mapping の
       不在のため、Vulkan renderer の設計が先。

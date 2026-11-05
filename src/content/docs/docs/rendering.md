@@ -224,8 +224,8 @@ the `scanout_frames` counter show whether it is active.
 ## GPU panel background (opt-in)
 
 `tessa-panel` normally renders with Cairo into `wl_shm` buffers. Setting
-`panel_renderer = gpu` keeps Cairo as the source of truth but changes how the
-background layer is presented:
+`panel_renderer = gpu` changes how the background layer is presented. With the
+default `wallpaper_engine = cairo`:
 
 1. On configure, scale change, or config reload, the panel renders the existing
    wallpaper (gradient, ink, sun, image or shader frame, and signature) into a
@@ -234,12 +234,26 @@ background layer is presented:
 3. A `wl_egl_window` plus an EGL/GLES2 context presents a fullscreen triangle.
    The fragment shader samples the texture and adds restrained water ripples,
    ink drift, and a slow sun pulse.
-4. `wallpaper_animation = true` schedules redraws at `wallpaper_fps` (default
-   30). Animation pauses while an overlay is open and when `animations = false`
-   or `reduce_motion = true`.
 
-The launcher, bar, popovers, and toasts stay on the Cairo path. This is the
-first stage of the GPU panel renderer, not a full UI rewrite.
+With `wallpaper_engine = procedural`, steps 1-2 are skipped for the background:
+the shader generates the gradient, wash, ink, sun, water lines, grain, and
+vignette directly. The small corner mark is still rendered by Cairo once and
+uploaded as a transparent texture. Palette changes cross-fade over 300 ms.
+`wallpaper_image` and `wallpaper_shader` continue to use the texture path.
+4. `wallpaper_animation = on` schedules redraws at `wallpaper_fps` (default
+   30). `auto` additionally pauses on battery power and after
+   `wallpaper_idle_pause` seconds without input. Both modes pause while an
+   overlay or a fullscreen window is visible, and when `animations = false` or
+   `reduce_motion = true`.
+
+The launcher, bar, popovers, and toasts stay on the Cairo path by default.
+`overlay_renderer = gpu` is an opt-in first stage for the launcher and popovers:
+Cairo renders the final overlay content once per state change, uploads it as a
+texture, and the GPU applies the open/close scale, fade, and drop. Cairo is not
+re-run on animation frames. Row stagger and the sliding selection marker remain
+Cairo-only in this phase; a later layered renderer can restore them on the GPU.
+
+This is the first stage of the GPU panel renderer, not a full UI rewrite.
 
 Requirements and fallback:
 
