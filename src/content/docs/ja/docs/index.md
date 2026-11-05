@@ -13,10 +13,14 @@ Waybar / Rofi / wofi は必須ではありませんが、layer-shell 対応の�
 
 ![Tessa のモザイクレイアウト](/images/mosaic.png)
 
+![Tessa の統合コントロールパネル](/images/control-center.png)
+
 ![Tessa のランチャー](/images/launcher.png)
 
-上のスクリーンショットは headless 開発セッションで、ターミナルに foot を使って
-撮影したものです。
+上のスクリーンショットは headless 開発セッションで、kitty と Vermilion Ink
+パレットを使って撮影したものです。コントロールパネルはデモ用の
+NetworkManager / BlueZ サービスを使っているため、実際の Wi-Fi SSID や
+Bluetooth デバイスは表示されません。
 
 ビルド、インストール、全設定キー、ルール、エフェクト、IPC、イベント、
 フックを一冊にまとめた

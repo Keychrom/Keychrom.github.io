@@ -4,9 +4,9 @@ import sharp from 'sharp';
 
 const root = process.cwd();
 const logo = fs.readFileSync(path.join(root, 'src/assets/logo.svg'));
-const mosaic = path.join(root, 'public/images/mosaic.png');
+const hero = path.join(root, 'public/images/control-center.png');
 
-if (!fs.existsSync(mosaic)) {
+if (!fs.existsSync(hero)) {
   throw new Error('Run npm run sync:docs before generating the OG image.');
 }
 
@@ -38,7 +38,7 @@ const overlay = Buffer.from(`
   <text x="82" y="548" fill="#64748b" font-family="JetBrains Mono, monospace" font-size="17" letter-spacing="2">WLROOTS 0.20  ·  ZIG 0.17  ·  keychrom.github.io</text>
 </svg>`);
 
-await sharp(mosaic)
+await sharp(hero)
   .resize(1200, 630, { fit: 'cover', position: 'centre' })
   .modulate({ brightness: 0.62 })
   .composite([{ input: overlay }])
