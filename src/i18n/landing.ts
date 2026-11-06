@@ -28,6 +28,7 @@ export const landing = {
       primary: 'Get started',
       secondary: 'View on GitHub',
       note: 'wlroots 0.20 · Zig 0.17 · 78 headless tests',
+      film: 'Watch the film',
     },
     layout: {
       eyebrow: 'One compositor, many shapes',
@@ -50,6 +51,21 @@ export const landing = {
       { value: '120', unit: 'MiB', label: 'idle session RAM' },
       { value: '78', unit: 'tests', label: 'headless scripts' },
     ],
+    motion: {
+      eyebrow: 'Motion',
+      title: 'The desktop, in motion.',
+      body: 'A thirty-second loop through the bar, the layouts, the launcher, and the measurements underneath them.',
+      duration: '30 second loop',
+      play: 'Play',
+      pause: 'Pause',
+      replay: 'Replay',
+      hint: 'Click the stage to pause · 30 s loop',
+      fullscreen: 'Full screen',
+      exitFullscreen: 'Exit full screen',
+      iframeTitle: 'Tessa motion graphics — a thirty-second tour of the desktop',
+      description:
+        'A thirty-second animated tour. The five-petal Tessa mark spins over a vermilion sun; four windows cycle through Master, Mosaic, Grid, Columns, Scrolling, Monocle, and Stacking layouts; the launcher types “ter” and offers Terminal, Text Editor, and Japanese input with Fcitx5 and Mozc; measured figures count up to 59.7 fps, 2.4 ms per frame, 120 MiB idle RAM, and 78 headless tests; the film closes on the Tessa wordmark and github.com/Keychrom/Tessa.',
+    },
     features: {
       eyebrow: 'What is inside',
       title: 'Small surface. Deep control.',
@@ -182,6 +198,7 @@ export const landing = {
       primary: 'はじめる',
       secondary: 'GitHub を見る',
       note: 'wlroots 0.20 · Zig 0.17 · headless テスト 78 本',
+      film: 'モーションを見る',
     },
     layout: {
       eyebrow: 'ひとつのコンポジタ、複数の形',
@@ -204,6 +221,21 @@ export const landing = {
       { value: '120', unit: 'MiB', label: 'アイドル時 RAM' },
       { value: '78', unit: 'tests', label: 'headless テスト' },
     ],
+    motion: {
+      eyebrow: 'モーション',
+      title: '動き出す、Tessa。',
+      body: 'バー、レイアウト、ランチャー、そしてその下にある実測値まで。約30秒のループでTessaのデスクトップを一望します。',
+      duration: '30秒ループ',
+      play: '再生',
+      pause: '一時停止',
+      replay: '最初から',
+      hint: 'ステージをクリックで一時停止 · 約30秒ループ',
+      fullscreen: '全画面',
+      exitFullscreen: '全画面を終了',
+      iframeTitle: 'Tessa モーショングラフィックス — デスクトップの30秒ツアー',
+      description:
+        '約30秒のアニメーション。五弁のTessaマークが朱色の太陽の上で回転し、4つのウィンドウがマスター、モザイク、グリッド、カラム、スクロール、モノクル、スタッキングの各レイアウトを巡ります。ランチャーは「ter」と入力してTerminal、Text Editor、Fcitx5 + Mozcの日本語入力を提示。実測値は59.7 fps、1フレーム2.4 ms、アイドル時RAM 120 MiB、headlessテスト78本までカウントアップし、Tessaのワードマークとgithub.com/Keychrom/Tessaで幕を閉じます。',
+    },
     features: {
       eyebrow: '中身',
       title: '小さな表面、深い操作。',

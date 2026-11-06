@@ -3,6 +3,7 @@ import { landing, type LandingLocale } from '../../i18n/landing';
 import LayoutPreview from '../landing/LayoutPreview.svelte';
 import InstallTabs from '../landing/InstallTabs.svelte';
 import BenchmarkSpark from '../landing/BenchmarkSpark.svelte';
+import MotionFilm from './MotionFilm.astro';
 
 interface Props {
   locale: LandingLocale;
@@ -53,6 +54,17 @@ const spans = ['md:col-span-4', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2
           </svg>
           {copy.hero.secondary}
         </a>
+        <a
+          href="#motion"
+          class="group inline-flex items-center gap-2.5 rounded-full border border-[var(--tessa-border-soft)] bg-[var(--tessa-surface)]/25 py-2 pl-2 pr-4 text-sm font-medium text-[var(--tessa-muted)] transition hover:border-[var(--tessa-border)] hover:text-[var(--tessa-text)]"
+        >
+          <span class="grid size-6 place-items-center rounded-full bg-[var(--tessa-accent)]/15 text-[var(--tessa-accent-2)] transition group-hover:bg-[var(--tessa-accent)] group-hover:text-[#fff8f4]">
+            <svg class="ml-0.5 size-3" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M4.2 2.6a.9.9 0 0 1 1.36-.78l7.7 4.6a.9.9 0 0 1 0 1.55l-7.7 4.6a.9.9 0 0 1-1.36-.78Z" />
+            </svg>
+          </span>
+          {copy.hero.film}
+        </a>
       </div>
       <p class="mt-5 font-mono text-[0.64rem] uppercase tracking-[0.14em] text-[var(--tessa-faint)]">{copy.hero.note}</p>
     </div>
@@ -96,6 +108,8 @@ const spans = ['md:col-span-4', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2
     ))}
   </div>
 </section>
+
+<MotionFilm copy={copy} />
 
 <section id="features" class="scroll-mt-28 py-20 sm:py-28">
   <div class="site-container">

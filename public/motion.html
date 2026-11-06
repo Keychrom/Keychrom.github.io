@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tessa — Motion</title>
+<style>
+:root{--ink:#14213d;--paper:#faf7f2;--ver:#e2684f;box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--ink)}
+body{overflow:hidden;font-family:Inter,"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;color:var(--paper)}
+#stage{container-type:size;width:100%;height:100%;background:var(--ink);position:relative;overflow:hidden;cursor:pointer}
+#stage:focus-visible{outline:.35cqw solid var(--paper);outline-offset:-.8cqw}
+#stage:before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 20% 0%,#2a4070 0,transparent 60%),radial-gradient(80% 60% at 100% 100%,#0a1020 0,transparent 70%)}
+.sc{position:absolute;inset:0;display:none}
+[data-s="0"] .s0,[data-s="1"] .s1,[data-s="2"] .s2,[data-s="3"] .s3,[data-s="4"] .s4{display:block}
+.sun{position:absolute;left:50%;top:50%;width:46cqw;height:46cqw;margin:-23cqw;border-radius:50%;background:var(--ver);opacity:.0;animation:sun 4s ease-out forwards}
+@keyframes sun{0%{transform:scale(.2);opacity:0}30%{opacity:.9}100%{transform:scale(1) translate(12cqw,-4cqw);opacity:.22}}
+.mark{position:absolute;left:50%;top:34%;width:14cqw;height:14cqw;margin:-7cqw;animation:spin 2.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes spin{from{transform:rotate(-200deg) scale(0);opacity:0}to{transform:none;opacity:1}}
+.mark ellipse{fill:var(--ver)}
+.t{position:absolute;left:0;right:0;text-align:center;opacity:0;animation:up .9s ease-out forwards}
+@keyframes up{from{opacity:0;transform:translateY(2cqw);filter:blur(1cqw)}to{opacity:1;transform:none;filter:none}}
+.eyebrow{top:51%;font-size:1.5cqw;letter-spacing:.5cqw;text-transform:uppercase;color:var(--ver);animation-delay:.9s}
+.h1{top:56%;font-size:4.4cqw;font-weight:700;letter-spacing:-.1cqw;animation-delay:1.3s}
+.sub{top:68%;font-size:1.7cqw;opacity:.7;animation-delay:2s}
+.bar{position:absolute;left:3cqw;right:3cqw;top:2cqw;height:5cqw;border-radius:2.5cqw;background:#faf7f21c;backdrop-filter:blur(8px);border:1px solid #faf7f233;display:flex;align-items:center;gap:1.2cqw;padding:0 2cqw;font-size:1.3cqw;animation:drop .8s ease-out both}
+@keyframes drop{from{transform:translateY(-8cqw)}to{transform:none}}
+.bar b{letter-spacing:.3cqw;color:var(--ver)}.pill{width:2.2cqw;height:1.2cqw;border-radius:.6cqw;background:#faf7f233;transition:.5s}.pill.on{background:var(--ver);width:3.6cqw}.sp{flex:1}
+#area{position:absolute;left:3cqw;right:3cqw;top:9cqw;bottom:6cqw;overflow:hidden}
+.w{position:absolute;transition:all .9s cubic-bezier(.65,0,.25,1);animation:pop .7s ease-out backwards}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.w i{position:absolute;inset:.6cqw;border-radius:.9cqw;background:#0c1630;border:.2cqw solid #faf7f233;overflow:hidden;transition:border-color .4s,box-shadow .4s;font-style:normal}
+.w.f i{border-color:var(--ver);box-shadow:0 0 3cqw #e2684f55}
+.w u{display:block;height:1.8cqw;background:#faf7f214;text-decoration:none}
+.w s{display:block;height:.45cqw;margin:.9cqw 1cqw;border-radius:.3cqw;background:#faf7f255;text-decoration:none;animation:ln 3s ease-in-out infinite alternate}
+.w s:nth-child(3){width:60%;background:var(--ver)}.w s:nth-child(4){width:40%}.w s:nth-child(5){width:75%}.w s:nth-child(6){width:50%}
+@keyframes ln{to{transform:scaleX(.7);transform-origin:left}}
+.lab{position:absolute;left:0;right:0;bottom:1.6cqw;display:flex;justify-content:center;gap:1cqw;font-size:1.4cqw}
+.lab span{padding:.5cqw 1.4cqw;border-radius:2cqw;border:1px solid #faf7f233;opacity:.5;transition:.4s}.lab span.on{background:var(--ver);border-color:var(--ver);opacity:1}
+.scrim{position:absolute;inset:0;background:#0b1327aa;animation:fade .5s both}@keyframes fade{from{opacity:0}}
+.ln{position:absolute;left:25cqw;top:16cqw;width:50cqw;background:#faf7f2;color:#14213d;border-radius:1.4cqw;padding:1.6cqw;box-shadow:0 3cqw 8cqw #0008;animation:pop .6s ease-out both}
+.ln .q{font-size:2.2cqw;border-bottom:.2cqw solid var(--ver);padding-bottom:1cqw;min-height:3cqw}
+.ln .q em{font-style:normal;border-bottom:.2cqw dotted #14213d}.ln .q:after{content:"";display:inline-block;width:.2cqw;height:2cqw;background:var(--ver);vertical-align:middle;margin-left:.3cqw;animation:bl .8s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.r{font-size:1.6cqw;padding:.9cqw 1cqw;border-radius:.8cqw;margin-top:.5cqw;display:flex;gap:1cqw;align-items:center;opacity:0;animation:up .5s ease-out forwards}
+.r:nth-of-type(1){animation-delay:1.4s;background:#e2684f1f}.r:nth-of-type(2){animation-delay:1.6s}.r:nth-of-type(3){animation-delay:1.8s}
+.r q{width:2.6cqw;height:2.6cqw;border-radius:.7cqw;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-size:1.3cqw;quotes:none}
+.cand{position:absolute;left:3cqw;top:7.2cqw;background:#fff;border:1px solid #14213d33;border-radius:.8cqw;padding:.6cqw 1.2cqw;font-size:1.6cqw;box-shadow:0 1cqw 3cqw #0003;opacity:0;animation:up .4s 2.6s forwards}
+.cand b{color:var(--ver)}
+.st{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);gap:2cqw;padding:22cqw 5cqw 0}
+.st div{text-align:center;opacity:0;animation:up .7s ease-out forwards}.st div:nth-child(2){animation-delay:.2s}.st div:nth-child(3){animation-delay:.4s}.st div:nth-child(4){animation-delay:.6s}
+.st strong{display:block;font-size:6cqw;color:var(--ver);font-variant-numeric:tabular-nums}.st small{font-size:1.5cqw;opacity:.7;letter-spacing:.2cqw}
+.cap{position:absolute;top:10cqw;left:0;right:0;text-align:center;font-size:3cqw;font-weight:700}
+.big{position:absolute;left:0;right:0;top:34%;text-align:center;font-size:9cqw;font-weight:800;letter-spacing:1.4cqw;animation:up 1s both}
+.url{top:62%;font-size:1.9cqw;animation-delay:.8s;color:var(--ver)}.tag{top:70%;font-size:1.5cqw;opacity:.7;animation-delay:1.2s}
+#prog{position:absolute;left:0;bottom:0;height:.5cqw;background:var(--ver);width:0}
+#stage.poster .sun{animation:none;opacity:.22;transform:scale(1) translate(12cqw,-4cqw)}
+#stage.poster .mark{animation:none;opacity:1;transform:none}
+#stage.poster .t{animation:none;opacity:1;transform:none;filter:none}
+@media (prefers-reduced-motion:reduce){
+  #stage *{animation-duration:.01s!important;transition-duration:.01s!important}
+}
+</style>
+</head>
+<body>
+<div id="stage" data-s="0" role="button" tabindex="0" aria-label="Tessa motion. Activate to pause or resume.">
+ <div class="sc s0">
+  <div class="sun"></div>
+  <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><g id="pet"><ellipse cx="50" cy="26" rx="10" ry="22" transform="rotate(0 50 50)"/><ellipse cx="50" cy="26" rx="10" ry="22" transform="rotate(72 50 50)"/><ellipse cx="50" cy="26" rx="10" ry="22" transform="rotate(144 50 50)"/><ellipse cx="50" cy="26" rx="10" ry="22" transform="rotate(216 50 50)"/><ellipse cx="50" cy="26" rx="10" ry="22" transform="rotate(288 50 50)"/></g><circle cx="50" cy="50" r="6" fill="#faf7f2"/></svg>
+  <div class="t eyebrow">Wayland, composed</div>
+  <div class="t h1">A quiet desktop with sharp edges.</div>
+  <div class="t sub">compositor + shell · Zig on wlroots</div>
+ </div>
+ <div class="sc s1">
+  <div class="bar"><b>TESSA</b><span id="pills" style="display:flex;gap:.6cqw"></span><span class="sp"></span><span>CPU 4% · RAM 120 MiB</span><span>09:41</span></div>
+  <div id="area"></div>
+  <div class="lab" id="lab"></div>
+ </div>
+ <div class="sc s2">
+  <div class="scrim"></div>
+  <div class="ln">
+   <div class="q" id="q"></div>
+   <div class="r"><q>T</q>Terminal<span style="margin-left:auto;opacity:.5">kitty</span></div>
+   <div class="r"><q>Te</q>Text Editor</div>
+   <div class="r"><q>日</q>日本語入力 · Fcitx5 + Mozc</div>
+  </div>
+ </div>
+ <div class="sc s3">
+  <div class="cap t" style="animation-delay:0s">Measured, not guessed.</div>
+  <div class="st">
+   <div><strong data-n="59.7" data-d="1">0</strong><small>FPS · SINGLE SURFACE</small></div>
+   <div><strong data-n="2.4" data-d="1">0</strong><small>MS · COMPOSITOR / FRAME</small></div>
+   <div><strong data-n="120" data-d="0">0</strong><small>MIB · IDLE RAM</small></div>
+   <div><strong data-n="78" data-d="0">0</strong><small>HEADLESS TESTS</small></div>
+  </div>
+ </div>
+ <div class="sc s4">
+  <div class="big">TESSA</div>
+  <div class="t url">github.com/Keychrom/Tessa</div>
+  <div class="t tag">MIT · Arch · Ubuntu · NixOS</div>
+ </div>
+ <div id="prog"></div>
+</div>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},st=$('#stage'),prog=$('#prog');
+var pills=$('#pills');for(var i=1;i<=9;i++)pills.insertAdjacentHTML('beforeend','<i class="pill'+(i==1?' on':'')+'"></i>');
+var L={Master:[[0,0,60,100],[60,0,40,33.3],[60,33.3,40,33.3],[60,66.6,40,33.4]],
+Mosaic:[[0,0,50,100],[50,0,50,50],[50,50,25,50],[75,50,25,50]],
+Grid:[[0,0,50,50],[50,0,50,50],[0,50,50,50],[50,50,50,50]],
+Columns:[[0,0,25,100],[25,0,25,100],[50,0,25,100],[75,0,25,100]],
+Scrolling:[[-36,0,46,100],[12,0,46,100],[60,0,46,100],[108,0,46,100]],
+Monocle:[[0,0,100,100],[0,0,100,100],[0,0,100,100],[0,0,100,100]],
+Stacking:[[0,0,70,78],[10,8,70,78],[20,16,70,78],[30,22,70,78]]};
+var names=Object.keys(L),area=$('#area'),lab=$('#lab'),wins=[];
+names.forEach(function(n){lab.insertAdjacentHTML('beforeend','<span>'+n+'</span>')});
+for(i=0;i<4;i++){area.insertAdjacentHTML('beforeend','<div class="w" style="animation-delay:'+(.3+i*.15)+'s"><i><u></u><s></s><s></s><s></s><s></s><s></s></i></div>')}
+wins=[].slice.call(area.children);
+function lay(k){var p=L[names[k]];var fo=k%4,mono=names[k]==='Monocle';wins.forEach(function(w,j){var c=p[j];w.style.left=c[0]+'%';w.style.top=c[1]+'%';w.style.width=c[2]+'%';w.style.height=c[3]+'%';w.style.opacity=(mono&&j!==fo)?0:1;w.style.zIndex=j===fo?10:j;w.classList.toggle('f',j===fo)});
+[].forEach.call(lab.children,function(s,j){s.classList.toggle('on',j===k)});
+[].forEach.call(pills.children,function(s,j){s.classList.toggle('on',j===k)})}
+var D=[4200,12800,5200,4200,3400],timers=[],t0=0,paused=true,cur=0;
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var embedded=window.self!==window.top;
+function clr(){timers.forEach(clearTimeout);timers=[]}
+function later(f,ms){timers.push(setTimeout(f,ms))}
+function setRunState(run){st.style.animationPlayState=run?'':'paused';[].forEach.call(st.querySelectorAll('*'),function(e){e.style.animationPlayState=run?'':'paused'})}
+function postState(){if(!embedded)return;try{window.parent.postMessage({type:'tessa-motion',event:'state',playing:!paused,scene:cur},'*')}catch(e){}}
+function type(){var q=$('#q'),s='ter',j=0;q.textContent='';if(reduce){q.textContent=s;return}
+function step(){if(j<s.length){q.textContent+=s[j++];later(step,260)}}
+later(step,500)}
+function count(){document.querySelectorAll('[data-n]').forEach(function(e){var n=+e.dataset.n,d=+e.dataset.d;if(reduce){e.textContent=n.toFixed(d);return}var s=performance.now();(function f(t){var p=Math.min(1,(t-s)/1400),v=n*(1-Math.pow(1-p,3));e.textContent=v.toFixed(d);if(p<1)requestAnimationFrame(f)})(s)})}
+function go(i){clr();cur=i%5;st.dataset.s=cur;t0=performance.now();
+var old=document.querySelector('.cand');if(old)old.remove();
+if(cur==1){lay(0);for(var k=1;k<7;k++)(function(k){later(function(){lay(k)},k*1800)})(k)}
+if(cur==2)type();if(cur==3)count();
+if(!paused)later(function(){go(cur+1)},D[cur])}
+var total=D.reduce(function(a,b){return a+b},0);
+function tick(){if(!paused){var b=0;for(var i=0;i<cur;i++)b+=D[i];var p=Math.min(1,(b+performance.now()-t0)/total);prog.style.width=(p*100)+'%'}requestAnimationFrame(tick)}
+function play(){if(!paused){postState();return}paused=false;st.classList.remove('poster');setRunState(true);go(cur);postState()}
+function pause(){if(paused){postState();return}paused=true;clr();setRunState(false);postState()}
+function toggle(){paused?play():pause()}
+st.addEventListener('click',toggle);
+st.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle()}});
+window.addEventListener('message',function(e){if(e.source!==window.parent)return;var d=e.data;if(!d||d.type!=='tessa-motion')return;
+if(d.action==='play')play();else if(d.action==='pause')pause();else if(d.action==='toggle')toggle();
+else if(d.action==='restart'){paused=false;st.classList.remove('poster');setRunState(true);go(0);postState()}
+else if(d.action==='state')postState()});
+var auto=!embedded&&!reduce;
+paused=!auto;
+go(0);
+if(paused){st.classList.add('poster');setRunState(false)}
+tick();
+postState();
+})();
+</script>
+</body>
+</html>
