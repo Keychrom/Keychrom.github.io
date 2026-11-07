@@ -60,12 +60,12 @@ cd Tessa
   </div>
 
   <p class="text-xs leading-5 text-[var(--tessa-faint)]">{copy.install.notes[tab]}</p>
-  {#if tab === 'nixos'}
+  {#if tab === 'nixos' || tab === 'arch'}
     <a
       class="text-xs font-medium text-[var(--tessa-accent-2)] hover:underline"
-      href={copy.install.nixosHref}
+      href={tab === 'nixos' ? copy.install.nixosHref : copy.install.archHref}
     >
-      {copy.install.nixosLink} →
+      {tab === 'nixos' ? copy.install.nixosLink : copy.install.archLink} →
     </a>
   {/if}
 </div>

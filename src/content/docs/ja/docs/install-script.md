@@ -5,7 +5,7 @@ description: "install.sh で Ubuntu / Debian に現在の Tessa をインスト�
 
 `install.sh` は Ubuntu / Debian 向けのソースインストーラーです。ディストリビューションの Wayland スタックは置き換えず、足りないものだけを `/opt/tessa` にビルドします。
 
-ディストリビューションが Zig 0.17、wlroots 0.20、scenefx 0.5、十分新しい libinput を提供していない場合に使います。Arch Linux では代わりに [PKGBUILD](/ja/docs/packaging/#arch-linux) を、NixOS では [NixOS flake ガイド](/ja/docs/install-nixos/) を使ってください。
+ディストリビューションが Zig 0.17、wlroots 0.20、scenefx 0.5、十分新しい libinput を提供していない場合に使います。Arch Linux では代わりに [Arch Linux ガイド](/ja/docs/install-arch/) を、NixOS では [NixOS flake ガイド](/ja/docs/install-nixos/) を使ってください。
 
 > **テスト状況:** `install.sh` は追加されたばかりで、まだ十分な検証ができていません。Ubuntu 24.04 x86_64 ではビルド、インストール、動的ライブラリの解決まで確認していますが、Debian 13/sid、aarch64、実機 GPU でのセッション起動は未確認です。試験的なものとして扱い、実行前にスクリプトを確認し、既存のセッションへ戻れる状態を残してください。
 
@@ -79,6 +79,35 @@ tessa --check-config ~/.config/tessa/config
 ```
 
 最初のキー操作は[クイックスタート](/ja/docs/quickstart/)、すべての設定項目は[ガイド](/ja/docs/guide/)を参照してください。
+
+## アップデート
+
+最新のチェックアウトでインストーラーを再実行します。プライベートな
+Wayland/wlroots スタックを再ビルドし、インストール済みバイナリとラッパーを
+置き換えます。`~/.config/tessa/config` はそのまま残ります。
+
+```sh
+cd Tessa
+git pull --ff-only
+./install.sh --check
+./install.sh
+```
+
+最初のインストール時に使ったオプション（`--plain`、`--minimal`、`--prefix`
+など）を再度指定してください。インストーラーは前回のオプションを記憶して
+いません。更新は TTY か別のデスクトップセッションから実行してください。
+実行中の Tessa セッションは、ログアウトして新しいセッションを開始するまで
+古いバイナリのままです。
+
+ログイン後の確認:
+
+```sh
+tessa-ctl config-check
+tessa-ctl state | head
+```
+
+設定キーは追加方式です。ないキーは既定値になります。オプションの改名・削除が
+あった場合はガイドを確認してください。
 
 ## 注意
 

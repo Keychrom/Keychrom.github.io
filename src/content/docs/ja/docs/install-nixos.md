@@ -160,6 +160,38 @@ EGL が必要なため使えませんが、その他の機能は通常通り動�
 バー、キーボード入力、ランチャー、foot、xwayland-satellite 経由の XTerm
 まで確認済みです。
 
+## アップデート
+
+Tessa を flake の input にしている場合、input を更新してシステムを再ビルド
+します:
+
+```sh
+cd /etc/nixos
+sudo nix flake update tessa
+sudo nixos-rebuild switch --flake .#host
+```
+
+`host` は自分の flake の属性名に置き換えてください。
+`/etc/nixos/tessa.nix` が flake input ではなく
+`builtins.getFlake "github:Keychrom/Tessa"` を使っている場合、リビジョンは
+`flake.lock` に固定されません。Tessa を input として追加し、`flake.lock` に
+正確なリビジョンを記録することを推奨します。そうでない場合は、意図した
+リビジョンで再ビルドしてください。
+
+実行中のセッションは、ログアウトして新しい Tessa セッションを開始するまで
+古いコンポジタとパネルのままです。前のシステム世代へ戻す場合:
+
+```sh
+sudo nixos-rebuild switch --rollback
+```
+
+ログイン後に設定と描画を確認します:
+
+```sh
+tessa-ctl config-check
+tessa-ctl rendering
+```
+
 ## 確認
 
 切り替え後に、インストール内容とセッションを確認します:

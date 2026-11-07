@@ -54,6 +54,11 @@ export default defineConfig({
               translations: { ja: 'クイックスタート' },
             },
             {
+              slug: 'docs/install-arch',
+              label: 'Arch Linux',
+              translations: { ja: 'Arch Linux' },
+            },
+            {
               slug: 'docs/install-script',
               label: 'Ubuntu / Debian installer',
               translations: { ja: 'Ubuntu / Debian インストーラー' },

@@ -24,6 +24,7 @@ const publicRoot = path.join(root, 'public');
 const siteOnlyPages = [
   'install-script',
   'install-nixos',
+  'install-arch',
   'tessa-wm-only',
   'panel-other-compositors',
 ];

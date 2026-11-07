@@ -158,6 +158,36 @@ This exact setup was tested on NixOS 26.05: SDDM autologin, the Tessa session,
 the panel and bar, keyboard input, the launcher, foot, and XTerm through
 xwayland-satellite.
 
+## Updating
+
+If Tessa is a flake input, update that input and rebuild the system:
+
+```sh
+cd /etc/nixos
+sudo nix flake update tessa
+sudo nixos-rebuild switch --flake .#host
+```
+
+Replace `host` with your flake attribute name. If `/etc/nixos/tessa.nix` uses
+`builtins.getFlake "github:Keychrom/Tessa"` instead of a flake input, the
+revision is not pinned by your flake. Prefer adding Tessa as an input so
+`flake.lock` records the exact revision; otherwise rebuild with the revision
+you intend to test.
+
+The running session keeps the old compositor and panel until you log out and
+start a new Tessa session. To return to the previous system generation:
+
+```sh
+sudo nixos-rebuild switch --rollback
+```
+
+After logging in, check the configuration and rendering:
+
+```sh
+tessa-ctl config-check
+tessa-ctl rendering
+```
+
 ## Verification
 
 After switching, check the installed files and the session:

@@ -9,7 +9,7 @@ under `/opt/tessa`.
 
 Use it when the distribution does not provide Zig 0.17, wlroots 0.20, scenefx
 0.5, or a new enough libinput. Arch Linux users should use the
-[PKGBUILD](/docs/packaging/#arch-linux) instead. NixOS users should use the
+[Arch Linux guide](/docs/install-arch/) instead. NixOS users should use the
 [NixOS flake guide](/docs/install-nixos/) instead.
 
 > **Testing status:** `install.sh` is new and has not been tested widely yet.
@@ -101,6 +101,34 @@ tessa --check-config ~/.config/tessa/config
 
 See the [Quickstart](/docs/quickstart/) for the first key bindings and the
 [Guide](/docs/guide/) for every configuration option.
+
+## Updating
+
+Update from the latest checkout and re-run the installer. It rebuilds the
+private Wayland/wlroots stack and replaces the installed binaries and wrappers;
+your `~/.config/tessa/config` is left in place.
+
+```sh
+cd Tessa
+git pull --ff-only
+./install.sh --check
+./install.sh
+```
+
+Pass the same options you used for the original install (`--plain`,
+`--minimal`, `--prefix`, and so on); the installer does not remember them.
+Run the update from a TTY or another desktop session. The running Tessa session
+keeps the old binaries until you log out and start a new session.
+
+After logging in:
+
+```sh
+tessa-ctl config-check
+tessa-ctl state | head
+```
+
+Configuration keys are additive; missing keys use their defaults. Review the
+guide if an option was renamed or removed.
 
 ## Notes
 
