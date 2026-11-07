@@ -21,7 +21,12 @@ const publicRoot = path.join(root, 'public');
 
 // Pages that exist only on the website and are not generated from Tessa's
 // Markdown. Preserve them when the generated docs directories are replaced.
-const siteOnlyPages = ['install-script', 'install-nixos'];
+const siteOnlyPages = [
+  'install-script',
+  'install-nixos',
+  'tessa-wm-only',
+  'panel-other-compositors',
+];
 
 const pages = [
   {

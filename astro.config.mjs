@@ -84,6 +84,22 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Shell modes',
+          translations: { ja: 'シェルの構成' },
+          items: [
+            {
+              slug: 'docs/tessa-wm-only',
+              label: 'Tessa WM only',
+              translations: { ja: 'Tessa WM のみ' },
+            },
+            {
+              slug: 'docs/panel-other-compositors',
+              label: 'Panel on other compositors',
+              translations: { ja: '他コンポジタでパネル' },
+            },
+          ],
+        },
+        {
           label: 'Extending',
           translations: { ja: '拡張' },
           items: [

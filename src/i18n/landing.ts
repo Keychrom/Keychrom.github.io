@@ -152,6 +152,8 @@ export const landing = {
       cards: [
         { title: 'Start here', body: 'Install Tessa, start your first session, and learn the essential keys.', href: '/docs/quickstart/' },
         { title: 'Set up and customize', body: 'Install, key bindings, rules, layouts, effects, and the panel.', href: '/docs/guide/' },
+        { title: 'Tessa WM only', body: 'Run the compositor with Waybar, fuzzel, or another layer-shell shell.', href: '/docs/tessa-wm-only/' },
+        { title: 'Panel on other compositors', body: 'Use Tessa Panel on Hyprland or Niri. Niri is tested; Hyprland is experimental.', href: '/docs/panel-other-compositors/' },
         { title: 'Build an extension', body: 'The stable v1 contract: handshake, scopes, tokens, and lifecycle.', href: '/docs/extension-api/' },
         { title: 'Understand the compositor', body: 'Scene graph, rendering, IPC, layout helpers, and the panel.', href: '/docs/architecture/' },
       ],
@@ -322,6 +324,8 @@ export const landing = {
       cards: [
         { title: 'はじめる', body: 'インストール、最初のセッション起動、基本のキー操作。', href: '/ja/docs/quickstart/' },
         { title: 'セットアップとカスタマイズ', body: 'インストール、キーバインド、ルール、レイアウト、エフェクト、パネル。', href: '/ja/docs/guide/' },
+        { title: 'Tessa WM のみ', body: 'Waybar、fuzzel などの layer-shell シェルと組み合わせてコンポジタだけを使う。', href: '/ja/docs/tessa-wm-only/' },
+        { title: '他コンポジタでパネル', body: 'Hyprland／Niri で Tessa Panel を使う。Niri は検証済み、Hyprland は実験的。', href: '/ja/docs/panel-other-compositors/' },
         { title: '拡張を作る', body: '安定版 v1 の契約: ハンドシェイク、スコープ、トークン、ライフサイクル。', href: '/ja/docs/extension-api/' },
         { title: 'コンポジタを理解する', body: 'シーングラフ、描画、IPC、レイアウトヘルパー、パネル。', href: '/ja/docs/architecture/' },
       ],
