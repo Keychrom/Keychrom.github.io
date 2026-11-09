@@ -91,11 +91,18 @@ binds {
 ```
 
 Other panel views are available as `--send control`, `--send wifi`,
-`--send bluetooth`, `--send notifications`, and `--send calendar`.
+`--send bluetooth`, `--send notifications`, `--send theme`, and
+`--send calendar`.
 
 The panel reads the normal Tessa config (`panel_modules`, `bar_layout`, theme,
 fonts). Set `TESSA_CONFIG` before starting the bridge to use a specific file.
 If `tessa-panel` is not in `PATH`, pass `--panel /path/to/tessa-panel`.
+
+The THEME page in the unified control center also works in this panel-only
+setup, but it changes only the panel colors. Window borders and the wallpaper
+belong to Tessa's compositor, so they are unaffected. The panel writes
+`theme-colors.conf` next to the active config and reloads itself; the bridge
+ignores the compositor reload request.
 
 ## Compatibility status
 

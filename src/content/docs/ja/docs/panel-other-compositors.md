@@ -93,11 +93,17 @@ binds {
 ```
 
 ほかのビューは `--send control`、`--send wifi`、`--send bluetooth`、
-`--send notifications`、`--send calendar` で開けます。
+`--send notifications`、`--send theme`、`--send calendar` で開けます。
 
 パネルは通常の Tessa 設定（`panel_modules`、`bar_layout`、テーマ、フォント）
 を読みます。別ファイルを使う場合は起動前に `TESSA_CONFIG` を設定してください。
 `tessa-panel` が `PATH` にない場合は `--panel /path/to/tessa-panel` を指定します。
+
+unified コントロールセンターの THEME ページはパネル単体でも使えますが、
+変更できるのはパネルの色だけです。ウィンドウ枠と壁紙は Tessa のコンポジタが
+管理するため影響を受けません。パネルは有効な設定の隣に
+`theme-colors.conf` を書き、自身だけを再読み込みします。ブリッジは
+コンポジタ向けの再読み込み要求を無視します。
 
 ## 互換性の検証状況
 
