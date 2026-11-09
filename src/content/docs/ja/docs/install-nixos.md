@@ -97,6 +97,7 @@ man ページ、ドキュメントが含まれます。
 | `programs.tessa.config` | `null` | インライン設定（`configFile` と排他） |
 | `programs.tessa.extraPackages` | `[ ]` | ターミナル、ランチャー、IME、ツール |
 | `programs.tessa.xwayland` | `true` | X11 用に `xwayland-satellite` を追加 |
+| `programs.tessa.fonts` | `true` | パネルの日本語/CJK 表示用に Noto Sans CJK を導入 |
 | `programs.tessa.portals` | `true` | スクリーンショット/画面共有用の wlr ポータル |
 | `programs.tessa.defaultSession` | `true` | ディスプレイマネージャの既定セッションにする |
 | `programs.tessa.networkmanager` | `false` | コントロールセンターの Wi-Fi 用に NetworkManager を有効化 |
@@ -108,6 +109,10 @@ NetworkManager、Bluetooth、power-profiles-daemon はすべての Tessa 環境�
 使うとは限らないため opt-in です。有効にすると対応する NixOS サービスも
 有効になります。サービスが無い場合、コントロールセンターは該当セクションを
 利用不可として表示するので、Tessa を再ビルドせずに後から有効化できます。
+
+`programs.tessa.fonts` は `noto-fonts-cjk-sans` を `fonts.packages` に追加します。
+システム側で CJK フォントを管理している場合だけ無効にしてください。無い場合、
+パネルの日本語タイトルやステータスが豆腐（□）になることがあります。
 
 ## 設定
 

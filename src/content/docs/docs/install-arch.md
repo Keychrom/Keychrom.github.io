@@ -21,8 +21,13 @@ Install the build dependencies:
 ```sh
 sudo pacman -Syu --needed base-devel git zig wlroots0.20 scenefx \
   wayland wayland-protocols libxkbcommon libinput pixman libdrm \
-  libegl mesa cairo pango glib2 gdk-pixbuf2
+  libegl mesa cairo pango glib2 gdk-pixbuf2 noto-fonts-cjk
 ```
+
+`noto-fonts-cjk` provides the Japanese/Chinese/Korean glyphs used by the
+panel. Without any CJK font, Japanese text renders as empty boxes. A smaller
+Japanese-only alternative is `adobe-source-han-sans-jp-fonts`; both families
+are included in the panel's fallback list.
 
 ## Install
 

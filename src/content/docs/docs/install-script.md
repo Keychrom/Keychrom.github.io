@@ -70,6 +70,10 @@ fcitx5 + Mozc, `xdg-desktop-portal`, `xdg-desktop-portal-wlr`, PipeWire,
 `wlr-randr`, and `grim`. Use `--minimal` on a server or when you manage those
 packages yourself.
 
+The panel uses Noto Sans CJK as its Japanese fallback. If you choose
+`--minimal`, install `fonts-noto-cjk` separately so Japanese titles and status
+text do not render as empty boxes.
+
 Use `--plain` when the GPU or VM cannot provide GLES2, or when you do not want
 the scenefx effects.
 

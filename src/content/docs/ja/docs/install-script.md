@@ -52,6 +52,10 @@ cd Tessa
 
 既定では `kitty`、Inter、JetBrains Mono、Noto CJK、fcitx5 + Mozc、`xdg-desktop-portal`、`xdg-desktop-portal-wlr`、PipeWire、`wlr-randr`、`grim` も導入します。サーバー用途や自分でパッケージを管理する場合は `--minimal` を使ってください。
 
+パネルは日本語のフォールバックに Noto Sans CJK を使います。`--minimal` を
+選んだ場合は `fonts-noto-cjk` を別途導入してください。CJK フォントがないと
+日本語のタイトルやステータスが豆腐（□）になります。
+
 GPU や VM が GLES2 を提供できない場合、または scenefx のエフェクトが不要な場合は `--plain` を使います。
 
 ## インストール後

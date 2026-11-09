@@ -20,8 +20,13 @@ Tessa は Arch Linux 公式パッケージの Zig 0.17、wlroots 0.20、scenefx 
 ```sh
 sudo pacman -Syu --needed base-devel git zig wlroots0.20 scenefx \
   wayland wayland-protocols libxkbcommon libinput pixman libdrm \
-  libegl mesa cairo pango glib2 gdk-pixbuf2
+  libegl mesa cairo pango glib2 gdk-pixbuf2 noto-fonts-cjk
 ```
+
+`noto-fonts-cjk` はパネルが使う日本語・中国語・韓国語のグリフを提供します。
+CJK フォントがないと日本語が豆腐（□）になります。日本語だけなら
+`adobe-source-han-sans-jp-fonts` でも構いません。どちらのファミリもパネルの
+フォールバックに含まれています。
 
 ## インストール
 

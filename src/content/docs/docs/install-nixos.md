@@ -96,6 +96,7 @@ config, man pages, and documentation.
 | `programs.tessa.config` | `null` | Inline config; mutually exclusive with `configFile` |
 | `programs.tessa.extraPackages` | `[ ]` | Terminal, launcher, IME, and tools for the session |
 | `programs.tessa.xwayland` | `true` | Add `xwayland-satellite` for X11 applications |
+| `programs.tessa.fonts` | `true` | Install Noto Sans CJK for panel Japanese/CJK text |
 | `programs.tessa.portals` | `true` | Enable the wlr screenshot/screencast portal |
 | `programs.tessa.defaultSession` | `true` | Set the display manager's default session |
 | `programs.tessa.networkmanager` | `false` | Enable NetworkManager for control-center Wi-Fi |
@@ -107,6 +108,10 @@ NetworkManager, Bluetooth, and power-profile options are opt-in because not
 every Tessa machine uses them; each one turns on the corresponding NixOS
 service. The control center shows an unavailable section when a service is
 absent, so they can be enabled later without rebuilding Tessa.
+
+`programs.tessa.fonts` adds `noto-fonts-cjk-sans` to `fonts.packages`. Disable
+it only when the system already provides a CJK font; otherwise Japanese titles
+and status text in the panel can render as empty boxes.
 
 ## Configuration
 
