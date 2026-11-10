@@ -95,8 +95,10 @@ Other panel views are available as `--send control`, `--send wifi`,
 `--send calendar`.
 
 The panel reads the normal Tessa config (`panel_modules`, `bar_layout`, theme,
-fonts). Set `TESSA_CONFIG` before starting the bridge to use a specific file.
-If `tessa-panel` is not in `PATH`, pass `--panel /path/to/tessa-panel`.
+fonts), then `panel.conf` next to it for panel-only settings. Set `TESSA_CONFIG`
+before starting the bridge to use a specific base file, and
+`TESSA_PANEL_CONFIG` for a specific panel file. If `tessa-panel` is not in
+`PATH`, pass `--panel /path/to/tessa-panel`.
 
 The THEME page in the unified control center also works in this panel-only
 setup, but it changes only the panel colors. Window borders and the wallpaper

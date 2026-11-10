@@ -73,12 +73,19 @@ Tessa は出力ごとにパネルを自動起動します。`tessa-panel` を自
 ```sh
 mkdir -p ~/.config/tessa
 cp /opt/tessa/share/tessa/config.example ~/.config/tessa/config
+cp /opt/tessa/share/tessa/panel.example ~/.config/tessa/panel.conf
 ```
+
+`config` はコンポジタの動作と共有テーマ、`panel.conf` はバー、ランチャー、
+ポップオーバー、壁紙、コントロールセンターの設定です。既存の `config` に
+パネルキーがあっても動作します。既存の `panel.conf` へ `panel.example` を
+上書きしないでください。
 
 セッションと設定を確認します。
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa --check-config ~/.config/tessa/config
 ```
 
@@ -88,7 +95,7 @@ tessa --check-config ~/.config/tessa/config
 
 最新のチェックアウトでインストーラーを再実行します。プライベートな
 Wayland/wlroots スタックを再ビルドし、インストール済みバイナリとラッパーを
-置き換えます。`~/.config/tessa/config` はそのまま残ります。
+置き換えます。`~/.config/tessa/config` と `panel.conf` はそのまま残ります。
 
 ```sh
 cd Tessa

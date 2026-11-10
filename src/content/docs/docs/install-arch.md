@@ -45,7 +45,7 @@ The package installs:
 - `/usr/bin/tessa-panel-compat` (the Hyprland/Niri bridge; Python 3 is an
   optional dependency)
 - `/usr/bin/tessa-session` and the Wayland session entry
-- `/usr/share/tessa/config.example`
+- `/usr/share/tessa/config.example` and `/usr/share/tessa/panel.example`
 - the XDG portal entry, man pages, and documentation
 
 Python is only needed for `tessa-panel-compat`; the compositor and native panel
@@ -66,8 +66,15 @@ have one yet:
 ```sh
 mkdir -p ~/.config/tessa
 cp /usr/share/tessa/config.example ~/.config/tessa/config
+cp /usr/share/tessa/panel.example ~/.config/tessa/panel.conf
 tessa-ctl config-check
+tessa-panel --check
 ```
+
+`config` holds compositor behavior and shared theme tokens; `panel.conf` holds
+bar, launcher, popover, wallpaper, and control-center settings. If you already
+have panel keys in `config`, leave them in place or move them; do not copy
+`panel.example` over an existing `panel.conf`.
 
 Quit the session with `Super+Shift+E`.
 

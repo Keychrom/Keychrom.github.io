@@ -96,8 +96,10 @@ binds {
 `--send notifications`、`--send theme`、`--send calendar` で開けます。
 
 パネルは通常の Tessa 設定（`panel_modules`、`bar_layout`、テーマ、フォント）
-を読みます。別ファイルを使う場合は起動前に `TESSA_CONFIG` を設定してください。
-`tessa-panel` が `PATH` にない場合は `--panel /path/to/tessa-panel` を指定します。
+を読み、その隣の `panel.conf` からパネル専用設定を読みます。別ファイルを
+使う場合は起動前に `TESSA_CONFIG`（ベース設定）と `TESSA_PANEL_CONFIG`
+（パネル設定）を設定してください。`tessa-panel` が `PATH` にない場合は
+`--panel /path/to/tessa-panel` を指定します。
 
 unified コントロールセンターの THEME ページはパネル単体でも使えますが、
 変更できるのはパネルの色だけです。ウィンドウ枠と壁紙は Tessa のコンポジタが

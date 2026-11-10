@@ -43,7 +43,7 @@ makepkg -si
 - `/usr/bin/tessa`、`/usr/bin/tessa-panel`、`/usr/bin/tessa-ctl`
 - `/usr/bin/tessa-panel-compat`（Hyprland/Niri 用ブリッジ。Python 3 は任意依存）
 - `/usr/bin/tessa-session` と Wayland セッションエントリ
-- `/usr/share/tessa/config.example`
+- `/usr/share/tessa/config.example`、`/usr/share/tessa/panel.example`
 - XDG ポータル設定、man ページ、ドキュメント
 
 Python が必要なのは `tessa-panel-compat` だけで、コンポジタとネイティブ
@@ -63,8 +63,15 @@ Tessa は出力ごとにパネルを 1 つ起動します。設定例がまだ�
 ```sh
 mkdir -p ~/.config/tessa
 cp /usr/share/tessa/config.example ~/.config/tessa/config
+cp /usr/share/tessa/panel.example ~/.config/tessa/panel.conf
 tessa-ctl config-check
+tessa-panel --check
 ```
+
+`config` はコンポジタの動作と共有テーマ、`panel.conf` はバー、ランチャー、
+ポップオーバー、壁紙、コントロールセンターの設定です。既存の `config` に
+パネルキーがある場合はそのまま使うか移してください。既存の `panel.conf` へ
+`panel.example` を上書きしないでください。
 
 セッションは `Super+Shift+E` で終了します。
 

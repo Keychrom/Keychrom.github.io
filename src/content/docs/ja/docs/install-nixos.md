@@ -121,19 +121,23 @@ NetworkManager、Bluetooth、power-profiles-daemon はすべての Tessa 環境�
 
 ```nix
 programs.tessa.config = ''
-  panel = true
+  window-rule = app-id=foot; shader=mono
+'';
+
+environment.etc."tessa/panel.conf".text = ''
   panel_renderer = gpu
   overlay_renderer = gpu
   wallpaper_engine = procedural
   wallpaper_animation = auto
-  window-rule = app-id=foot; shader=mono
 '';
 ```
 
 モジュールはセッションに `TESSA_CONFIG=/etc/tessa/config` を設定します。
 これらを指定しない場合、Tessa はこれまで通り
 `$XDG_CONFIG_HOME/tessa/config` または `~/.config/tessa/config` を読みます。
-設定例は `/etc/tessa/config.example` にインストールされます。
+設定例は `/etc/tessa/config.example` と `/etc/tessa/panel.example` に
+インストールされます。パネル専用設定は通常 `/etc/tessa/panel.conf` に置き、
+`config` に残したパネルキーも互換性のため動作します。
 
 ## VM とソフトウェア描画
 

@@ -94,12 +94,19 @@ To start from the example configuration:
 ```sh
 mkdir -p ~/.config/tessa
 cp /opt/tessa/share/tessa/config.example ~/.config/tessa/config
+cp /opt/tessa/share/tessa/panel.example ~/.config/tessa/panel.conf
 ```
+
+`config` holds compositor behavior and shared theme tokens; `panel.conf` holds
+bar, launcher, popover, wallpaper, and control-center settings. Existing panel
+keys in `config` still work. Do not copy `panel.example` over an existing
+`panel.conf`.
 
 Then check the session and configuration:
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa --check-config ~/.config/tessa/config
 ```
 
@@ -110,7 +117,7 @@ See the [Quickstart](/docs/quickstart/) for the first key bindings and the
 
 Update from the latest checkout and re-run the installer. It rebuilds the
 private Wayland/wlroots stack and replaces the installed binaries and wrappers;
-your `~/.config/tessa/config` is left in place.
+your `~/.config/tessa/config` and `panel.conf` are left in place.
 
 ```sh
 cd Tessa

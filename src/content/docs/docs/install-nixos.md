@@ -120,19 +120,23 @@ that should be installed as `/etc/tessa/config`:
 
 ```nix
 programs.tessa.config = ''
-  panel = true
+  window-rule = app-id=foot; shader=mono
+'';
+
+environment.etc."tessa/panel.conf".text = ''
   panel_renderer = gpu
   overlay_renderer = gpu
   wallpaper_engine = procedural
   wallpaper_animation = auto
-  window-rule = app-id=foot; shader=mono
 '';
 ```
 
 The module sets `TESSA_CONFIG=/etc/tessa/config` for the session. Without these
 options Tessa reads `$XDG_CONFIG_HOME/tessa/config` or
-`~/.config/tessa/config` as usual. The example file is installed at
-`/etc/tessa/config.example`.
+`~/.config/tessa/config` as usual. The example files are installed at
+`/etc/tessa/config.example` and `/etc/tessa/panel.example`. Panel-only settings
+normally live in `/etc/tessa/panel.conf`; panel keys left in `config` still work
+for compatibility.
 
 ## VMs and software rendering
 
