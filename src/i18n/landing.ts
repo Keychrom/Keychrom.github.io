@@ -70,6 +70,8 @@ export const landing = {
       eyebrow: 'What is inside',
       title: 'Small surface. Deep control.',
       body: 'Everything you need for a daily desktop is in the repository — no bar, launcher, or notification daemon required.',
+      more: 'See the Tessa unique features, starting with Scenes',
+      moreHref: '/docs/unique-features/',
       items: [
         {
           kicker: 'Layouts',
@@ -244,6 +246,8 @@ export const landing = {
       eyebrow: '中身',
       title: '小さな表面、深い操作。',
       body: '日常使いに必要なものはリポジトリの中にあります。バー、ランチャー、通知デーモンを別途入れる必要はありません。',
+      more: 'Scene をはじめとする Tessa 独自機能を見る',
+      moreHref: '/ja/docs/unique-features/',
       items: [
         {
           kicker: 'レイアウト',

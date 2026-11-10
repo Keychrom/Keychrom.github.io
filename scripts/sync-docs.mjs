@@ -27,6 +27,7 @@ const siteOnlyPages = [
   'install-arch',
   'tessa-wm-only',
   'panel-other-compositors',
+  'unique-features',
 ];
 
 const pages = [

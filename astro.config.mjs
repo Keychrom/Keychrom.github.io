@@ -70,6 +70,11 @@ export default defineConfig({
             },
             { slug: 'docs', label: 'Overview', translations: { ja: '概要' } },
             { slug: 'docs/guide', label: 'Guide', translations: { ja: 'ガイド' } },
+            {
+              slug: 'docs/unique-features',
+              label: 'Tessa unique features',
+              translations: { ja: 'Tessa独自機能' },
+            },
           ],
         },
         {
