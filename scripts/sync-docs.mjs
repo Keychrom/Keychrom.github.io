@@ -292,6 +292,7 @@ function main() {
   syncTree(path.join(source, 'docs/benchmarks'), path.join(publicRoot, 'benchmarks'));
   syncTree(path.join(source, 'examples'), path.join(publicRoot, 'examples'));
   fs.copyFileSync(path.join(source, 'config/config.example'), path.join(publicRoot, 'config.example'));
+  fs.copyFileSync(path.join(source, 'config/panel.example'), path.join(publicRoot, 'panel.example'));
 
   console.log(`Synced ${pages.length * 2 + extraPages.length + 2} docs from ${source}`);
 }
