@@ -8,6 +8,12 @@ scenefx 0.5. The repository ships a `tessa-git` PKGBUILD that builds the
 compositor, panel, CLI, session entry, portal selector, and compatibility
 bridge.
 
+> **Testing status:** the 0.2.5 headless suite passes on Arch Linux x86_64 with
+> Zig 0.17, wlroots 0.20, and scenefx 0.5 (plain and scenefx). A real
+> DRM/libinput session on this exact toolchain is still pending; the 0.2.4
+> package was validated on a real eDP-1 DRM session with keyboard, mouse, IME,
+> and XWayland.
+
 ## Requirements
 
 - Arch Linux x86_64
@@ -72,7 +78,8 @@ tessa-panel --check
 ```
 
 `config` holds compositor behavior and shared theme tokens; `panel.conf` holds
-bar, launcher, popover, wallpaper, and control-center settings. If you already
+the bar, launcher, popovers, wallpaper, panel fonts/colors, brand logo, control
+center, and panel commands. If you already
 have panel keys in `config`, leave them in place or move them; do not copy
 `panel.example` over an existing `panel.conf`.
 
@@ -92,22 +99,17 @@ cd packaging/arch
 makepkg -si
 ```
 
-`makepkg` fetches the current Tessa source from GitHub and rebuilds the package.
-If your checkout is a read-only mirror and `git pull` fails, re-clone the
-repository or update the mirror before rebuilding.
-
-If an AUR helper owns the package:
-
-```sh
-yay -Syu tessa-git
-# or
-paru -Syu tessa-git
-```
+`makepkg` fetches the current Tessa source from GitHub into its own source
+directory and rebuilds the package. `git pull` in the local checkout updates the
+PKGBUILD only; to build local changes, point `source=` at the checkout or use
+`scripts/build.sh`. If your checkout is a read-only mirror and `git pull` fails,
+re-clone or update the mirror before rebuilding.
 
 After updating:
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa-ctl state | head
 ```
 
@@ -118,6 +120,17 @@ keep the old binaries until you log out and start a new Tessa session.
 For a plain wlroots build without scenefx, use the source build described in
 the [guide](/docs/guide/#scenefx-effects-build); the repository PKGBUILD builds
 the default scenefx variant.
+
+## Uninstall
+
+```sh
+sudo pacman -Rns tessa-git      # review the removal list
+rm -rf ~/.config/tessa          # optional: config, panel.conf, scenes, theme-colors.conf
+```
+
+`pacman` leaves user configuration in `~/.config/tessa`; Scenes and
+`theme-colors.conf` are user files. A source install made with
+`scripts/install-session.sh` is removed from its `PREFIX` instead.
 
 ## Troubleshooting
 
@@ -136,6 +149,15 @@ manager scans that directory.
 **The panel does not start.** Check `tessa-ctl state` for `panel 1` and
 `tessa-ctl shell` for the panel role. If `tessa-panel` is not in `PATH`, the
 compositor logs the restart attempts.
+
+**The session exits or shows a black screen.** Start from a TTY with
+`TESSA_DEBUG=1 tessa` and capture the output or the display-manager journal;
+Tessa does not write a log file by default. Use `WLR_RENDERER=pixman` only with
+a `-Dscenefx=false` build.
+
+**The pointer is invisible in a VM.** Tessa's session wrapper sets
+`WLR_NO_HARDWARE_CURSORS=1` for known virtual GPUs; if you start `tessa`
+directly, set it yourself and install `xcursor-themes`.
 
 ## Related
 

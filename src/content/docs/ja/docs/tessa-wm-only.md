@@ -43,7 +43,10 @@ startup = swaybg -i ~/Pictures/wallpaper.png
 `TESSA_NO_PANEL=1` を設定してください。
 
 `tessa-panel` がないのに `panel = true` のままにすると、コンポジタが起動を
-繰り返します。`panel = false` を既定にしてください。
+繰り返します。`panel = false` を既定にしてください。`panel.conf` は `config` の
+後に読まれるため、そこで `panel = true` を書くと再度有効になります。
+`panel.conf` 側でも `panel = false` にするか、両方を上書きする
+`TESSA_NO_PANEL=1` で起動してください。
 
 ## 残るもの・移るもの
 

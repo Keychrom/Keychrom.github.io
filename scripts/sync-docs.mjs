@@ -25,6 +25,7 @@ const siteOnlyPages = [
   'install-script',
   'install-nixos',
   'install-arch',
+  'install-iso',
   'tessa-wm-only',
   'panel-other-compositors',
   'unique-features',
@@ -132,13 +133,17 @@ function extractPage(text, fallbackTitle) {
           !p.startsWith('|') &&
           !p.startsWith('>'),
       ) ?? '';
-  const description = paragraph
+  const clean = paragraph
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
     .replace(/[*_`~]/g, '')
     .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 180);
+    .trim();
+  const clipped = clean.slice(0, 180);
+  const firstSentence = clipped.match(/^[\s\S]*?[.!?](?=\s|$)/);
+  const description = firstSentence
+    ? firstSentence[0].trim()
+    : clipped.replace(/\s+\S*$/, '');
   return { title, description, body: body.trimStart() };
 }
 
@@ -159,6 +164,9 @@ function rewriteTarget(target, lang) {
 
   if (pathPart.includes('packaging/README')) {
     return (lang === 'ja' ? '/ja/docs/packaging/' : '/docs/packaging/') + anchor;
+  }
+  if (pathPart.includes('nix/README')) {
+    return (lang === 'ja' ? '/ja/docs/install-nixos/' : '/docs/install-nixos/') + anchor;
   }
   const basename = path.posix.basename(pathPart);
   const table = lang === 'ja' ? jaDocPaths : docPaths;

@@ -48,8 +48,9 @@ The installer asks for your password through `sudo`, then:
    scenefx versions under `/opt/tessa`
 4. builds Tessa and installs the compositor, panel, CLI, session entry, portal
    selector, and the Vermilion Ink theme
-5. creates `/usr/local/bin/tessa`, `tessa-panel`, `tessa-ctl`, and
-   `tessa-session` wrappers
+5. creates `/usr/local/bin` wrappers for `tessa`, `tessa-panel`, `tessa-ctl`,
+   `tessa-session`, and `tessa-panel-compat` (the last needs `python3`, which the
+   installer does not add)
 
 The private libraries are found through an RPATH on the installed binaries, so
 Tessa does not export `LD_LIBRARY_PATH` to the applications it launches.
@@ -98,7 +99,8 @@ cp /opt/tessa/share/tessa/panel.example ~/.config/tessa/panel.conf
 ```
 
 `config` holds compositor behavior and shared theme tokens; `panel.conf` holds
-bar, launcher, popover, wallpaper, and control-center settings. Existing panel
+the bar, launcher, popovers, wallpaper, panel fonts/colors, brand logo, control
+center, and panel commands. Existing panel
 keys in `config` still work. Do not copy `panel.example` over an existing
 `panel.conf`.
 
@@ -149,6 +151,8 @@ guide if an option was renamed or removed.
   wrappers take precedence. Remove one of the two installations rather than
   mixing them.
 - The installer does not provide an automatic uninstall command. Remove
-  `/opt/tessa`, the four wrappers in `/usr/local/bin`, and
-  `/usr/share/wayland-sessions/tessa.desktop` to undo a manual install.
+  `/opt/tessa`, the five wrappers above, `/usr/share/wayland-sessions/tessa.desktop`,
+  `/usr/share/xdg-desktop-portal/portals/tessa.portal`, and
+  `/usr/share/tessa/themes/vermilion-ink` to undo a manual install.
+  `~/.config/tessa` and `~/.cache/tessa-install` are left in place.
 - The installer source is [install.sh on GitHub](https://github.com/Keychrom/Tessa/blob/main/install.sh).

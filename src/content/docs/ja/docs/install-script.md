@@ -35,7 +35,7 @@ cd Tessa
 2. Zig 0.17.1 をダウンロードし、SHA256 を検証
 3. 必要な Wayland、libdrm、libxkbcommon、libinput、wlroots、scenefx を `/opt/tessa` にビルド
 4. Tessa をビルドし、コンポジタ、パネル、CLI、セッションエントリ、ポータルセレクタ、Vermilion Ink テーマを配置
-5. `/usr/local/bin/tessa`、`tessa-panel`、`tessa-ctl`、`tessa-session` のラッパーを作成
+5. `/usr/local/bin` に `tessa`、`tessa-panel`、`tessa-ctl`、`tessa-session`、`tessa-panel-compat` のラッパーを作成（最後のものは `python3` が必要で、インストーラーは導入しません）
 
 プライベートライブラリはインストール後のバイナリの RPATH から解決されます。Tessa が起動するアプリケーションへ `LD_LIBRARY_PATH` を渡しません。
 
@@ -77,7 +77,8 @@ cp /opt/tessa/share/tessa/panel.example ~/.config/tessa/panel.conf
 ```
 
 `config` はコンポジタの動作と共有テーマ、`panel.conf` はバー、ランチャー、
-ポップオーバー、壁紙、コントロールセンターの設定です。既存の `config` に
+ポップオーバー、壁紙、パネルのフォント/色、ブランドロゴ、コントロールセンター、
+パネル用コマンドの設定です。既存の `config` に
 パネルキーがあっても動作します。既存の `panel.conf` へ `panel.example` を
 上書きしないでください。
 
@@ -124,5 +125,5 @@ tessa-ctl state | head
 
 - X11 アプリケーションには `xwayland-satellite` が必要です。Ubuntu / Debian のパッケージにはないため、上流から導入するか `TESSA_XWAYLAND_BIN` にパスを設定してください。
 - ディストリビューションの `tessa` パッケージが既にある場合、`/usr/local/bin` のラッパーが優先されます。混在させず、どちらか一方にしてください。
-- 自動アンインストールはありません。手動インストールを元に戻すには、`/opt/tessa`、`/usr/local/bin` の 4 つのラッパー、`/usr/share/wayland-sessions/tessa.desktop` を削除します。
+- 自動アンインストールはありません。手動インストールを元に戻すには、`/opt/tessa`、上記 5 つのラッパー、`/usr/share/wayland-sessions/tessa.desktop`、`/usr/share/xdg-desktop-portal/portals/tessa.portal`、`/usr/share/tessa/themes/vermilion-ink` を削除します。`~/.config/tessa` と `~/.cache/tessa-install` は残ります。
 - インストーラーのソースは [GitHub の install.sh](https://github.com/Keychrom/Tessa/blob/main/install.sh) です。

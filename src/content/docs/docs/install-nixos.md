@@ -138,6 +138,12 @@ options Tessa reads `$XDG_CONFIG_HOME/tessa/config` or
 normally live in `/etc/tessa/panel.conf`; panel keys left in `config` still work
 for compatibility.
 
+`/etc/tessa/panel.conf` is derived from the active config path, so it is read
+only when the module sets `TESSA_CONFIG=/etc/tessa/config` (that is, when
+`configFile` or `config` is set). If you set neither, add
+`environment.sessionVariables.TESSA_PANEL_CONFIG = "/etc/tessa/panel.conf";`
+or keep `panel.conf` next to `~/.config/tessa/config`.
+
 ## VMs and software rendering
 
 A VM with vmwgfx, VMSVGA, or no 3D acceleration cannot create the GLES2 context
@@ -194,6 +200,7 @@ After logging in, check the configuration and rendering:
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa-ctl rendering
 ```
 
@@ -203,6 +210,7 @@ After switching, check the installed files and the session:
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa-ctl state
 tessa-ctl rendering
 ```
@@ -213,6 +221,13 @@ for `tessa-plain`. To capture the screen from inside the session:
 ```sh
 grim -o "$(tessa-ctl state | awk '/^OUT / { print $2; exit }')" /tmp/tessa.png
 ```
+
+## Removing Tessa
+
+Set `programs.tessa.enable = false;` and run `sudo nixos-rebuild switch` for the
+same flake. The session entry, portal, `/etc/tessa/*`, and session packages
+disappear with the new generation; `defaultSession` reverts when the module is
+disabled. Old generations can be removed with `sudo nix-collect-garbage -d`.
 
 ## Troubleshooting
 

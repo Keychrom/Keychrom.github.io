@@ -139,6 +139,12 @@ environment.etc."tessa/panel.conf".text = ''
 インストールされます。パネル専用設定は通常 `/etc/tessa/panel.conf` に置き、
 `config` に残したパネルキーも互換性のため動作します。
 
+`/etc/tessa/panel.conf` はアクティブな設定パスから導出されるため、
+モジュールが `TESSA_CONFIG=/etc/tessa/config` を設定する場合
+（`configFile` か `config` を指定した場合）だけ読まれます。どちらも指定しない
+場合は `environment.sessionVariables.TESSA_PANEL_CONFIG = "/etc/tessa/panel.conf";`
+を追加するか、`panel.conf` を `~/.config/tessa/config` の隣に置いてください。
+
 ## VM とソフトウェア描画
 
 vmwgfx、VMSVGA、または 3D アクセラレーションのない VM では、scenefx が
@@ -198,6 +204,7 @@ sudo nixos-rebuild switch --rollback
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa-ctl rendering
 ```
 
@@ -207,6 +214,7 @@ tessa-ctl rendering
 
 ```sh
 tessa-ctl config-check
+tessa-panel --check
 tessa-ctl state
 tessa-ctl rendering
 ```
@@ -217,6 +225,14 @@ tessa-ctl rendering
 ```sh
 grim -o "$(tessa-ctl state | awk '/^OUT / { print $2; exit }')" /tmp/tessa.png
 ```
+
+## Tessa の削除
+
+`programs.tessa.enable = false;` にして同じ flake で
+`sudo nixos-rebuild switch` を実行します。セッションエントリ、ポータル、
+`/etc/tessa/*`、セッションパッケージは新しい世代から消えます。モジュールを
+無効にすると `defaultSession` も戻ります。古い世代は
+`sudo nix-collect-garbage -d` で削除できます。
 
 ## トラブルシューティング
 

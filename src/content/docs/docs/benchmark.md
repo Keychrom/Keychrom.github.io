@@ -1,6 +1,6 @@
 ---
 title: "Benchmark: wayland-compositor-bench"
-description: "Tessa was measured with wayland-compositor-bench v0.6.1 on 2026-11-03. The tool measures the running Wayland session rather than a synthetic nested compositor, so the figures inclu"
+description: "Tessa was measured with wayland-compositor-bench v0.6.1 on 2026-11-03."
 ---
 
 Tessa was measured with
@@ -10,7 +10,9 @@ nested compositor, so the figures include Tessa's integrated panel, effects,
 and the live desktop configuration.
 
 No single score is produced. Compare individual axes and treat differences
-smaller than the reported run-to-run range as noise.
+smaller than the reported run-to-run range as noise. These figures predate the
+Scenes, control-center theme editor, audio input/device selection, and split
+`panel.conf` work; re-run the benchmark before quoting current performance.
 
 ## Environment
 

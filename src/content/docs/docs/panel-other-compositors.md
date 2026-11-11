@@ -39,8 +39,10 @@ switcher over two foot windows.*
 ./scripts/build.sh panel
 ```
 
-This builds `tessa-panel` without the compositor. Packaged installs include
-`tessa-panel-compat`; from a source checkout, run the script in `tools/`.
+This builds `tessa-panel` without the compositor. The Arch, `install.sh`, Nix,
+and `.deb` packages include `tessa-panel-compat`; the ISO's `tessa-iso` package
+does not, so run `python3 tools/tessa-panel-compat.py` from a source checkout
+there.
 
 ## Start the bridge
 
@@ -65,6 +67,8 @@ Useful options:
 ```sh
 python3 tools/tessa-panel-compat.py --print-state   # dump the translated state
 python3 tools/tessa-panel-compat.py --no-spawn      # serve state without panels
+python3 tools/tessa-panel-compat.py --compositor niri
+python3 tools/tessa-panel-compat.py --poll          # poll instead of socket events
 python3 tools/tessa-panel-compat.py --verbose
 ```
 
@@ -91,8 +95,8 @@ binds {
 ```
 
 Other panel views are available as `--send control`, `--send wifi`,
-`--send bluetooth`, `--send notifications`, `--send theme`, and
-`--send calendar`.
+`--send bluetooth`, `--send notifications`, `--send theme`, `--send calendar`,
+`--send scenes`, and `--send scenes-prev`.
 
 The panel reads the normal Tessa config (`panel_modules`, `bar_layout`, theme,
 fonts), then `panel.conf` next to it for panel-only settings. Set `TESSA_CONFIG`

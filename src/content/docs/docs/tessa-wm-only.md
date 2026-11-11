@@ -45,6 +45,9 @@ instead of editing the config.
 
 Do not leave `panel = true` with a missing `tessa-panel` binary: the compositor
 will keep trying to start it. `panel = false` is the supported configuration.
+`panel.conf` is loaded after `config` and can re-enable the panel, so either set
+`panel = false` there too or start with `TESSA_NO_PANEL=1`, which overrides both
+files.
 
 ## What stays and what moves
 

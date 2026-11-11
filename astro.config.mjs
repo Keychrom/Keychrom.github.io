@@ -68,6 +68,11 @@ export default defineConfig({
               label: 'NixOS',
               translations: { ja: 'NixOS' },
             },
+            {
+              slug: 'docs/install-iso',
+              label: 'Tessa Linux ISO',
+              translations: { ja: 'Tessa Linux ISO' },
+            },
             { slug: 'docs', label: 'Overview', translations: { ja: '概要' } },
             { slug: 'docs/guide', label: 'Guide', translations: { ja: 'ガイド' } },
             {

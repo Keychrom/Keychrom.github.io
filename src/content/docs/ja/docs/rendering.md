@@ -1,6 +1,6 @@
 ---
 title: "描画・ゲーム機能"
-description: "Tessa は upstream wlroots 0.20 の API を使って、direct scanout、tearing、 explicit sync、出力別の描画統計を提供します。HDR は本ドキュメントで調査結果を まとめていますが、まだ実装していません。"
+description: "Tessa は upstream wlroots 0.20 の API を使って、direct scanout、tearing、 explicit sync、出力別の描画統計を提供します。HDR は本ドキュメントで調査結果を"
 ---
 
 Tessa は upstream wlroots 0.20 の API を使って、direct scanout、tearing、
@@ -276,6 +276,18 @@ Cairo 専用です。レイヤー分割の後続実装で GPU 化できます。
 リファレンスの i5-6300U / Intel HD 520、1920x1080 では、30fps の
 アニメーションは背景のみのテストで 1 コアの約 2.5%、パネル全体で約 3.7%
 でした。静的な GPU 描画と Cairo 経路は起動後ほぼ 0% です。
+
+## ウィンドウスイッチャーのライブプレビュー
+
+Alt+Tab スイッチャーと Scene デッキは静止画ではなく、ウィンドウごとの
+ライブプレビューを使います。Tessa は
+`ext_foreign_toplevel_image_capture_source_manager_v1` と
+`ext_image_copy_capture_v1` を公開し、パネルが foreign-toplevel のキャプチャ
+ソースを要求、コンポジタが専用のオフスクリーンシーンへ描画します。フレームは
+ダメージ駆動で、長辺 512 px に制限してパネルへコピーします。非表示の
+ワークスペースや別出力のウィンドウも画面に出さずにプレビューできます。
+キャプチャプロトコルやバッファ形式が使えない場合はアプリのモノグラム表示へ
+フォールバックします。
 
 ## ウィンドウ単位 GPU シェーダー（オプトイン）
 

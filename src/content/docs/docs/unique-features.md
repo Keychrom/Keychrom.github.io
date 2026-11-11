@@ -93,7 +93,8 @@ The full reference is in the [Guide](/docs/guide/#scenes) and
 
 The bar, launcher, notification service, tray, media controls, audio card,
 control center, wallpaper, and window switcher are part of Tessa. There is no
-Waybar/Rofi/mako assembly step, and no separate process to theme or keep alive.
+third-party Waybar/Rofi/mako stack to assemble; Tessa starts, supervises,
+restarts, and themes its own panel process for each output.
 
 That integration is what makes Scenes possible: layout state, window state,
 theme tokens, and the panel all live in the same system.

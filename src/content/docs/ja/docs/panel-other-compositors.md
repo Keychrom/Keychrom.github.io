@@ -40,9 +40,10 @@ foot の 2 ウィンドウに重なって表示されています。*
 ./scripts/build.sh panel
 ```
 
-コンポジタを含めず `tessa-panel` だけをビルドします。パッケージ版には
-`tessa-panel-compat` が含まれます。ソースツリーから直接使う場合は
-`tools/` 内のスクリプトを実行してください。
+コンポジタを含めず `tessa-panel` だけをビルドします。Arch、`install.sh`、Nix、
+`.deb` パッケージには `tessa-panel-compat` が含まれますが、ISO の `tessa-iso`
+パッケージには含まれないため、ISO ではソースツリーの
+`python3 tools/tessa-panel-compat.py` を使ってください。
 
 ## ブリッジを起動する
 
@@ -67,6 +68,8 @@ python3 tools/tessa-panel-compat.py
 ```sh
 python3 tools/tessa-panel-compat.py --print-state   # 変換後の状態を表示
 python3 tools/tessa-panel-compat.py --no-spawn      # パネルを起動せず状態だけ提供
+python3 tools/tessa-panel-compat.py --compositor niri
+python3 tools/tessa-panel-compat.py --poll          # ソケットイベントの代わりにポーリング
 python3 tools/tessa-panel-compat.py --verbose
 ```
 
@@ -93,7 +96,8 @@ binds {
 ```
 
 ほかのビューは `--send control`、`--send wifi`、`--send bluetooth`、
-`--send notifications`、`--send theme`、`--send calendar` で開けます。
+`--send notifications`、`--send theme`、`--send calendar`、`--send scenes`、
+`--send scenes-prev` で開けます。
 
 パネルは通常の Tessa 設定（`panel_modules`、`bar_layout`、テーマ、フォント）
 を読み、その隣の `panel.conf` からパネル専用設定を読みます。別ファイルを
