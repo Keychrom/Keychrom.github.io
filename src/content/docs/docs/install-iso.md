@@ -5,7 +5,9 @@ description: "Build and boot the Arch-based Tessa Linux live/installer ISO with 
 
 Tessa Linux is an Arch-based live and installer image. It boots straight into
 the Tessa desktop with the Vermilion Ink theme, Japanese fonts, and Fcitx5 +
-Mozc, then installs offline with Calamares from a bundled rootfs.
+Mozc, then installs with Calamares from a bundled rootfs. **Installation
+requires a working internet connection**; Calamares checks connectivity before
+the install sequence and again before partitioning.
 
 The ISO is built from the separate
 [TessaISO](https://github.com/Keychrom/TessaISO) repository; the image itself is
@@ -15,16 +17,20 @@ not checked into git.
 
 | | |
 | --- | --- |
-| Image | `tessa-linux-2026.11.11-x86_64.iso` |
+| Image | `tessa-linux-2026.11.13-x86_64.iso` |
 | Size | 3.4 GB |
-| Tessa | current `0.2.5` development tree (`830fd87` at build time) |
-| SHA256 | `358d8e4aa657bc6e3013ead24edc029167272095a1a74d3ecb6ed4c93f71e15c` |
+| Tessa | current `0.2.5` development tree (`acf27d0` at build time) |
+| SHA256 | `1d8654281154e2e63ff8cf1c5a3a62f04eec3b02749cb8ffc11635b34983089c` |
 
-The 2026-11-11 image includes the split `config` + `panel.conf` defaults, the
-Tessa logo customization, Scenes, the unified control center, audio
-output/input selection, and the current panel. UEFI live boot was verified on
-the build host; the previous image was also verified through Calamares install,
-GRUB boot, SDDM login, Japanese locale, and Fcitx5 on UEFI and BIOS.
+The 2026-11-13 image includes the smoother spring/eased panel motion, card
+stagger, hover/press feedback, IME robustness fixes (text-input focus, XIM
+environment propagation, and GTK_IM_MODULE left unset), the split `config` +
+`panel.conf` defaults, logo customization, Scenes, the unified control center,
+audio output/input selection, and the current panel. It is an online-only
+installer and carries the GPL-3.0-or-later license files. UEFI live boot was
+verified in VirtualBox on the build date; the previous image was also verified
+through Calamares install, GRUB boot, SDDM login, Japanese locale, and Fcitx5 on
+UEFI and BIOS.
 
 ## Build the ISO
 
@@ -64,10 +70,12 @@ the desktop and the application menu.
 
 ## Install
 
-Calamares installs from the bundled rootfs without downloading packages. It
+Calamares installs from the bundled rootfs, but the install is **online-only**:
+the welcome page requires internet access, and a connectivity check runs before
+partitioning. Use the installer's network button to connect Wi-Fi if needed. It
 creates a GPT layout with GRUB on both UEFI and BIOS, enables SDDM, and sets up
-`ja_JP.UTF-8`, Noto CJK fonts, and Fcitx5 + Mozc. When the network is available,
-the installer also attempts a best-effort online update.
+`ja_JP.UTF-8`, Noto CJK fonts, and Fcitx5 + Mozc. After unpacking, the installer
+also attempts a best-effort package update.
 
 The installed system receives the same split defaults:
 
@@ -91,6 +99,17 @@ installed for reference. The `tessa-iso` package provides and conflicts with
 - Rebuild the ISO from TessaISO to pick up newer Tessa changes. The image is
   larger than GitHub's 2 GB per-file release-asset limit, so it is not attached
   to GitHub releases.
+- Offline installation is not supported. The bundled rootfs is still used, but
+  the installer aborts without a network connection.
+
+## Licensing
+
+TessaISO build tooling is **GPL-3.0-or-later**. Tessa itself remains **MIT**;
+the `tessa-iso` package declares MIT for the desktop. Arch Linux packages and
+Calamares are bundled under their own licenses. The ISO installs the GPL text
+and third-party notice at `/usr/share/licenses/tessa-linux-iso/`; see
+[TessaISO NOTICE.md](https://github.com/Keychrom/TessaISO/blob/main/NOTICE.md)
+for source locations and the written source offer.
 
 ## Related
 

@@ -5,7 +5,9 @@ description: "Calamares、日本語入力、最新の Tessa デスクトップ�
 
 Tessa Linux は Arch Linux ベースのライブ/インストーラーイメージです。起動すると
 Vermilion Ink テーマ、日本語フォント、Fcitx5 + Mozc 入りの Tessa デスクトップが
-立ち上がり、同梱 rootfs から Calamares でオフラインインストールできます。
+立ち上がり、同梱 rootfs から Calamares でインストールできます。**インストールには
+インターネット接続が必要**です。Calamares はインストール開始前とパーティション
+作成前に接続を確認します。
 
 ISO は別リポジトリの
 [TessaISO](https://github.com/Keychrom/TessaISO) でビルドします。イメージ自体は
@@ -15,16 +17,20 @@ git には含まれません。
 
 | | |
 | --- | --- |
-| イメージ | `tessa-linux-2026.11.11-x86_64.iso` |
+| イメージ | `tessa-linux-2026.11.13-x86_64.iso` |
 | サイズ | 3.4 GB |
-| Tessa | 現在の `0.2.5` 開発ツリー（ビルド時 `830fd87`） |
-| SHA256 | `358d8e4aa657bc6e3013ead24edc029167272095a1a74d3ecb6ed4c93f71e15c` |
+| Tessa | 現在の `0.2.5` 開発ツリー（ビルド時 `acf27d0`） |
+| SHA256 | `1d8654281154e2e63ff8cf1c5a3a62f04eec3b02749cb8ffc11635b34983089c` |
 
-2026-11-11 のイメージは、分割された `config` + `panel.conf` の既定値、
-Tessa ロゴのカスタマイズ、Scene、統合コントロールセンター、オーディオの
-出力/入力デバイス選択、最新パネルを含みます。UEFI ライブ起動をビルド機で
-確認済みです。前回のイメージでは Calamares インストール、GRUB 起動、SDDM
-ログイン、日本語ロケール、Fcitx5 を UEFI/BIOS の両方で確認しています。
+2026-11-13 のイメージは、スプリング／イーズの滑らかなパネルモーション、
+カード stagger、hover/press フィードバック、IME の堅牢化（text-input の
+フォーカス、XIM 環境の伝播、GTK_IM_MODULE の未設定化）、分割された
+`config` + `panel.conf` の既定値、Tessa ロゴのカスタマイズ、Scene、統合
+コントロールセンター、オーディオの出力/入力デバイス選択、最新パネルを含みます。
+オンライン専用インストーラーで、GPL-3.0-or-later のライセンスファイルも
+同梱します。UEFI ライブ起動をビルド日に VirtualBox で確認済みです。前回の
+イメージでは Calamares インストール、GRUB 起動、SDDM ログイン、日本語ロケール、
+Fcitx5 を UEFI/BIOS の両方で確認しています。
 
 ## ISO をビルドする
 
@@ -64,10 +70,12 @@ Tessa ライブセッションが起動します。GLES2 が使えない VM や�
 
 ## インストール
 
-Calamares はパッケージをダウンロードせず、同梱 rootfs からインストールします。
-GPT レイアウトを作成し、UEFI と BIOS の両方に GRUB を入れ、SDDM、
-`ja_JP.UTF-8`、Noto CJK、Fcitx5 + Mozc を設定します。ネットワークがある場合は
-ベストエフォートでオンライン更新も試みます。
+Calamares は同梱 rootfs からインストールしますが、**オンライン専用**です。
+ウェルカム画面でインターネット接続が必須になり、パーティション作成前に
+接続チェックが走ります。Wi-Fi はインストーラーのネットワークボタンから
+設定してください。GPT レイアウトを作成し、UEFI と BIOS の両方に GRUB を入れ、
+SDDM、`ja_JP.UTF-8`、Noto CJK、Fcitx5 + Mozc を設定します。rootfs 展開後に
+ベストエフォートでパッケージ更新も試みます。
 
 インストール先にも同じ分割設定が入ります:
 
@@ -91,6 +99,18 @@ GPT レイアウトを作成し、UEFI と BIOS の両方に GRUB を入れ、SD
 - 新しい Tessa を反映するには TessaISO から ISO を再ビルドします。イメージは
   GitHub のリリースアセット上限（1 ファイル 2 GB）を超えるため、GitHub Releases
   には添付していません。
+- オフラインインストールには対応しません。同梱 rootfs は使いますが、ネットワーク
+  がないとインストーラーは中断します。
+
+## ライセンス
+
+TessaISO のビルドツールは **GPL-3.0-or-later**、Tessa 本体は **MIT** です。
+`tessa-iso` パッケージはデスクトップに対して MIT を宣言しています。Arch Linux
+パッケージと Calamares はそれぞれのライセンスで同梱されます。ISO は GPL 全文と
+サードパーティ通知を `/usr/share/licenses/tessa-linux-iso/` に配置します。
+ソース入手先と written offer は
+[TessaISO NOTICE.md](https://github.com/Keychrom/TessaISO/blob/main/NOTICE.md)
+を参照してください。
 
 ## 関連
 
