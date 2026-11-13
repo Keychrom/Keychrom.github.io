@@ -38,6 +38,17 @@ UEFI ライブ起動は 2026-11-13 に VirtualBox で確認済みです。前回
 Calamares インストール、GRUB 起動、SDDM ログイン、日本語ロケール、Fcitx5 を
 UEFI/BIOS の両方で確認しています。
 
+## ダウンロード
+
+- [tessa-linux-2026.11.14-x86_64.iso](https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/tessa-linux-2026.11.14-x86_64.iso)
+- [SHA256SUMS](https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/SHA256SUMS)
+
+```sh
+curl -fLO https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/tessa-linux-2026.11.14-x86_64.iso
+curl -fLO https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/SHA256SUMS
+sha256sum -c SHA256SUMS
+```
+
 ## ISO をビルドする
 
 必要なもの: 最新の Arch Linux、`sudo` を使える通常ユーザー、ネットワーク、

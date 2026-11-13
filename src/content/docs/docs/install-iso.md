@@ -39,6 +39,17 @@ in VirtualBox on 2026-11-13. The previous image was also verified through
 Calamares install, GRUB boot, SDDM login, Japanese locale, and Fcitx5 on UEFI
 and BIOS.
 
+## Download
+
+- [tessa-linux-2026.11.14-x86_64.iso](https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/tessa-linux-2026.11.14-x86_64.iso)
+- [SHA256SUMS](https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/SHA256SUMS)
+
+```sh
+curl -fLO https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/tessa-linux-2026.11.14-x86_64.iso
+curl -fLO https://github.com/Keychrom/TessaISO/releases/download/v2026.11.14/SHA256SUMS
+sha256sum -c SHA256SUMS
+```
+
 ## Build the ISO
 
 Requirements: an up-to-date Arch Linux machine, a normal user with `sudo`,
